@@ -295,7 +295,8 @@ mktpacket.func = {
   },
   auxAPIConnect: function (callback, func_name = 'getAllData') {
     api_key = mktpacket.ctrl.api_key;
-    if (api_key !== null && api_key !== '' && api_key !== 'free-version') {
+    //if (api_key !== null && api_key !== '' && api_key !== 'free-version') {
+    if (api_key !== null && api_key !== '') {
       const apiUrl = 'https://codebakers.dev/apis/mktpacket/';
       const xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function () {

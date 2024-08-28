@@ -1,5 +1,7 @@
 ## mktpacket - v0.8.28
 
+**PRO Features for free until 01 OCT 2024**
+
 `mktpacket` is a JavaScript utility for collecting and managing various types of data from a web page. This script offers a comprehensive set of features for capturing page, client, user, and marketing data, as well as integrating with third-party services like Google Analytics and OneTrust.
 
 To navigate thru the data, access mktpacket.data object.
