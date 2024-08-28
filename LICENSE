@@ -1,0 +1,19 @@
+### `LICENSE`
+
+```text
+Custom License for mktpacket
+
+Copyright (c) 2024 - CodeBakers
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software (the "Software"), to use, copy, and modify the Software for personal use, subject to the following conditions:
+
+1. **Hosting and Personal Use**:  
+   - You are allowed to host this Software on your own servers for personal or internal business purposes.
+   - You may modify the Software for personal use only. Any modifications must remain for your private use and cannot be shared or distributed.
+
+2. **No Redistribution**:  
+   - You are NOT allowed to redistribute, sublicense, sell, or offer the Software, whether modified or unmodified, to any third party in any form.
+   - This restriction includes, but is not limited to, making the Software available on any public or private repositories, distributing it as part of a package, or embedding it in other applications intended for distribution.
+
+3. **No Warranty**:  
+   - THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
