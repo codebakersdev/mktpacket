@@ -58,4 +58,4 @@ This project is licensed under a Custom License. Please see the [LICENSE](LICENS
 To use this script, simply include it in your project:
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/codebakers/mktpacket@master/main.js" key="free-version" gtag=""></script>
+<script src="https://cdn.jsdelivr.net/gh/codebakersdev/mktpacket@master/main.js" key="free-version" gtag=""></script>
