@@ -1,6 +1,6 @@
 /*!
- * mktpacket - v0.8.28
- * Copyright (c) 2024 - CodeBakers
+ * mktpacket - v0.8.29
+ * Copyright (c) 2025 - CodeBakers
  * Licensed under our Custom License.
  * See the LICENSE file in the project root for more information.
  */
@@ -38,11 +38,11 @@ mktpacket.func = {
     mktpacket.data.page.language = document.documentElement.lang ? document.documentElement.lang : 'no_language';
   },
   getPageReferrer: function () {
-    if (localStorage.getItem('mktpacket_referrer') !== null) {
-      mktpacket.data.page.referrer = localStorage.getItem('mktpacket_referrer');
+    if (sessionStorage.getItem('mktpacket_referrer') !== null) {
+      mktpacket.data.page.referrer = sessionStorage.getItem('mktpacket_referrer');
     } else {
       mktpacket.data.page.referrer = document.referrer && !document.referrer.includes(document.location.hostname) ? document.referrer : 'no_referrer';
-      localStorage.setItem('mktpacket_referrer', mktpacket.data.page.referrer);
+      sessionStorage.setItem('mktpacket_referrer', mktpacket.data.page.referrer);
     }
   },
   getPageParameters: function () {
@@ -124,8 +124,13 @@ mktpacket.func = {
   getClientIsTouchscreen:function() {
     mktpacket.data.client.is_touchscreen = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0) ? true : false;;
   },
-  getClientIsMobile:function() {
-    mktpacket.data.client.is_mobile = navigator.userAgentData.mobile ? true : false;
+  getClientIsMobile: function() {
+    if (navigator.userAgentData && 'mobile' in navigator.userAgentData) {
+      mktpacket.data.client.is_mobile = navigator.userAgentData.mobile;
+    } else {
+      var ua = navigator.userAgent.toLowerCase();
+      mktpacket.data.client.is_mobile = /iphone|ipod|android|blackberry|iemobile|opera mini/.test(ua);
+    }
   },
   getClientScreenOrientation:function() {
     mktpacket.data.client.screen_orientation = screen.orientation.type;
@@ -195,7 +200,7 @@ mktpacket.func = {
         };
       });
     } else {
-      mktpacket.data.client.battery = 'Battery API not supported';
+      mktpacket.data.client.battery = 'no_information';
     }
   },
   getClientNetwork: function () {
@@ -209,7 +214,7 @@ mktpacket.func = {
         save_data: connection.saveData || false          // True if user enabled data saver
       };
     } else {
-      mktpacket.data.client.network = 'Network Information API not supported';
+      mktpacket.data.client.network = 'no_information';
     }
   },
   
@@ -242,15 +247,19 @@ mktpacket.func = {
         mktpacket.data.user.first_global_page = localStorage.getItem('mktpacket_' + 'first_global_page');
     } else {
       mktpacket.data.user.first_global_page = document.URL;
-      localStorage.setItem('mktpacket_' + 'first_global_page', mktpacket.data.user.first_global_page);
+      if (mktpacket.ctrl.persist.includes('first_global_page')) {
+        localStorage.setItem('mktpacket_' + 'first_global_page', mktpacket.data.user.first_global_page);
+      }
     }
   },
   getUserFirstSessionPage: function() {
     if (sessionStorage.getItem('mktpacket_' + 'first_session_page') !== null) {
-        mktpacket.data.user.first_session_page = localStorage.getItem('mktpacket_' + 'first_session_page');
+        mktpacket.data.user.first_session_page = sessionStorage.getItem('mktpacket_' + 'first_session_page');
     } else {
       mktpacket.data.user.first_session_page = document.URL;
-      localStorage.setItem('mktpacket_' + 'first_session_page', mktpacket.data.user.first_session_page);
+      if (mktpacket.ctrl.persist.includes('first_session_page')) {
+        sessionStorage.setItem('mktpacket_' + 'first_session_page', mktpacket.data.user.first_session_page);
+      }
     }
   },
   getUserTimeOnPage: function () {
@@ -393,17 +402,20 @@ mktpacket.func = {
       window.removeEventListener('hashchange', checkUrlChange);
     };
   },
-  auxAPIConnect: function (callback, func_name = 'getAllData') {
-    api_key = mktpacket.ctrl.api_key;
-    //if (api_key !== null && api_key !== '' && api_key !== 'free-version') {
+  auxAPIConnect: function (callback, func_name = 'getAllData', forceUpdate = false) {
+    const api_key = mktpacket.ctrl.api_key;
     if (api_key !== null && api_key !== '') {
       const apiUrl = 'https://codebakers.dev/apis/mktpacket/';
       const xhr = new XMLHttpRequest();
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
+      xhr.onload = function () {
+        if (xhr.status === 200) {
           let jsonResponse = xhr.response;
-          mktpacket.func.auxObjectMerge(mktpacket, jsonResponse);
-          callback?callback():'';
+          if (jsonResponse) {
+            mktpacket.func.auxObjectMerge(mktpacket, jsonResponse, forceUpdate);
+            callback ? callback() : '';
+          }
+        } else {
+          console.error('API call failed: ', xhr.status);
         }
       };
       xhr.open('POST', apiUrl, true);
@@ -412,24 +424,25 @@ mktpacket.func = {
       xhr.send(JSON.stringify({ key: api_key, func: func_name }));
     }
   },
-  auxObjectMerge: function (target, source) {
-      for (const key of Object.keys(source)) {
-          if (source[key] instanceof Object && key in target) {
-              mktpacket.func.auxObjectMerge(target[key], source[key]);
+  auxObjectMerge: function (target, source, forceUpdate = false) {
+    for (const key of Object.keys(source)) {
+      if (source[key] instanceof Object && key in target && typeof target[key] === 'object') {
+        mktpacket.func.auxObjectMerge(target[key], source[key], forceUpdate);
+      } else {
+        if (mktpacket.ctrl.persist.includes(key)) {
+          const persistedValue = localStorage.getItem('mktpacket_' + key);
+          if (!forceUpdate && persistedValue !== null) {
+            target[key] = persistedValue;
           } else {
-              if (mktpacket.ctrl.persist.includes(key)) {
-                  if (localStorage.getItem('mktpacket_' + key) !== null) {
-                      target[key] = localStorage.getItem('mktpacket_' + key);
-                  } else {
-                      target[key] = source[key];
-                      localStorage.setItem('mktpacket_' + key, source[key]);
-                  }
-              } else {
-                  target[key] = source[key];
-              }
+            target[key] = source[key];
+            localStorage.setItem('mktpacket_' + key, source[key]);
           }
+        } else {
+          target[key] = source[key];
+        }
       }
-      return target;
+    }
+    return target;
   },
   auxReadyEvent: function () {
     window.dataLayer.push({
@@ -440,18 +453,22 @@ mktpacket.func = {
   
   // API Updaters
   getUserIP: function() {
-    mktpacket.func.auxAPIConnect(function () { mktpacket.data.user.ip = mktpacket.ctrl.api_response }, 'getUserIP');
+    mktpacket.func.auxAPIConnect(function () {
+      mktpacket.data.user.ip = mktpacket.ctrl.api_response;
+    }, 'getUserIP');
   },
   getUserISP: function() {
-    mktpacket.func.auxAPIConnect(function () { mktpacket.data.user.isp = mktpacket.ctrl.api_response }, 'getUserISP');
+    mktpacket.func.auxAPIConnect(function () {
+      mktpacket.data.user.isp = mktpacket.ctrl.api_response;
+    }, 'getUserISP');
   },
-  getUserUniqueID: function() {
-    mktpacket.func.auxAPIConnect(function () { 
+  getUserUniqueID: function () {
+    mktpacket.func.auxAPIConnect(function () {
       mktpacket.data.user.uuid = mktpacket.ctrl.api_response;
       if (mktpacket.ctrl.persist.includes('uuid')) {
-        localStorage.setItem('mktpacket_uuid', mktpacket.data.user.uuid);
+        localStorage.setItem('mktpacket_' + 'uuid', mktpacket.data.user.uuid);
       }
-    }, 'getUserUniqueID');
+    }, 'getUserUniqueID', true);
   },
   
   // Init Layer 1 (script init)
