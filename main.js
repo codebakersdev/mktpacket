@@ -15,7 +15,7 @@ mktpacket = {
   ctrl: {
     api_key: document.currentScript.getAttribute('key')??'free-version',
     gtag_id: document.currentScript.getAttribute('gtag')??'',
-    persist: ['uuid', 'first_global_page', 'first_session_page']
+    persist: ['uuid', 'first_global_page', 'first_session_page', 'session_referrer', 'global_referrer']
   }
 };
 
@@ -37,12 +37,24 @@ mktpacket.func = {
   getPageLanguage: function () {
     mktpacket.data.page.language = document.documentElement.lang ? document.documentElement.lang : 'no_language';
   },
-  getPageReferrer: function () {
-    if (sessionStorage.getItem('mktpacket_referrer') !== null) {
-      mktpacket.data.page.referrer = sessionStorage.getItem('mktpacket_referrer');
+  getPageSessionReferrer: function () {
+    if (sessionStorage.getItem('mktpacket_session_referrer') !== null) {
+      mktpacket.data.page.session_referrer = sessionStorage.getItem('mktpacket_' + 'session_referrer');
     } else {
-      mktpacket.data.page.referrer = document.referrer && !document.referrer.includes(document.location.hostname) ? document.referrer : 'no_referrer';
-      sessionStorage.setItem('mktpacket_referrer', mktpacket.data.page.referrer);
+      mktpacket.data.page.session_referrer = document.referrer && !document.referrer.includes(document.location.hostname) ? document.referrer : 'no_referrer';
+      if (mktpacket.ctrl.persist.includes('session_referrer')) {
+        sessionStorage.setItem('mktpacket_' + 'session_referrer', mktpacket.data.page.session_referrer);
+      }
+    }
+  },
+  getPageGlobalReferrer: function() {
+    if (localStorage.getItem('mktpacket_global_referrer') !== null) {
+        mktpacket.data.page.global_referrer = localStorage.getItem('mktpacket_' + 'global_referrer');
+    } else {
+      mktpacket.data.page.global_referrer = document.referrer && !document.referrer.includes(document.location.hostname) ? document.referrer : 'no_referrer';
+      if (mktpacket.ctrl.persist.includes('global_referrer')) {
+        localStorage.setItem('mktpacket_' + 'global_referrer', mktpacket.data.page.global_referrer);
+      }
     }
   },
   getPageParameters: function () {
@@ -477,7 +489,8 @@ mktpacket.func = {
     this.getPageTitle();
     this.getPageLanguage();
     this.getPageParameters();
-    this.getPageReferrer();
+    this.getPageGlobalReferrer();
+    this.getPageSessionReferrer();
     this.getPageClickCount();
 
     this.getClientNetwork();
