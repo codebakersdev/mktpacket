@@ -84,6 +84,41 @@ mktpacket.func = {
         return { rgba: rgba, hex: hex, elements_count: count };
     }).sort((a, b) => b.elements_count - a.elements_count);
   },
+  getPageClickCount: function () {
+    if (!mktpacket.data.page.click_count) {
+      mktpacket.data.page.click_count = {};
+    }
+
+    document.addEventListener('click', function (event) {
+      const el = event.target;
+
+      // Build a descriptor
+      let descriptor = el.tagName.toLowerCase();
+      if (el.id) {
+        descriptor += `#${el.id}`;
+      } else if (el.className && typeof el.className === 'string') {
+        descriptor += '.' + el.className.trim().split(/\s+/).join('.');
+      }
+
+      // Add inner text snippet for generic tags
+      if (descriptor === 'div' || descriptor === 'span') {
+        descriptor += '[inner="' + el.innerText.trim().slice(0, 20) + '"]';
+      }
+
+      // Initialize if needed
+      if (!mktpacket.data.page.click_count[descriptor]) {
+        mktpacket.data.page.click_count[descriptor] = {
+          count: 0,
+          last_click_timestamp: null
+        };
+      }
+
+      // Update values
+      const clickData = mktpacket.data.page.click_count[descriptor];
+      clickData.count++;
+      clickData.last_click_timestamp = Math.floor(Date.now() / 1000); // Unix time in seconds
+    });
+  },
   
   // Client Data
   getClientIsTouchscreen:function() {
@@ -91,6 +126,9 @@ mktpacket.func = {
   },
   getClientIsMobile:function() {
     mktpacket.data.client.is_mobile = navigator.userAgentData.mobile ? true : false;
+  },
+  getClientScreenOrientation:function() {
+    mktpacket.data.client.screen_orientation = screen.orientation.type;
   },
   getClientPlatform: function() {
       const userAgent = navigator.userAgent;
@@ -146,6 +184,34 @@ mktpacket.func = {
   getClientTimezone: function() {
     mktpacket.data.client.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   },
+  getClientBatteryStatus: function() {
+    if (navigator.getBattery) {
+      navigator.getBattery().then(function(battery) {
+        mktpacket.data.client.battery = {
+          charging: battery.charging,
+          level: battery.level,
+          chargingTime: battery.chargingTime,
+          dischargingTime: battery.dischargingTime
+        };
+      });
+    } else {
+      mktpacket.data.client.battery = 'Battery API not supported';
+    }
+  },
+  getClientNetwork: function () {
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+
+    if (connection) {
+      mktpacket.data.client.network = {
+        effective_type: connection.effectiveType || null, // '4g', '3g', etc.
+        downlink: connection.downlink || null,           // Mbps estimate
+        rtt: connection.rtt || null,                     // Round-trip time in ms
+        save_data: connection.saveData || false          // True if user enabled data saver
+      };
+    } else {
+      mktpacket.data.client.network = 'Network Information API not supported';
+    }
+  },
   
   // User Data
   getUserIsBot:function() {
@@ -187,7 +253,41 @@ mktpacket.func = {
       localStorage.setItem('mktpacket_' + 'first_session_page', mktpacket.data.user.first_session_page);
     }
   },
-  
+  getUserTimeOnPage: function () {
+    const startTime = Date.now();
+    const updateTime = () => {
+      const now = Date.now();
+      const timeOnPage = Math.floor((now - startTime) / 1000);
+      mktpacket.data.user.time_on_page = timeOnPage;
+    };
+    const interval = setInterval(updateTime, 1000);
+    window.addEventListener('beforeunload', () => {
+      updateTime();
+      clearInterval(interval);
+    });
+  },
+  getUserTimeOnWebsite: function () {
+    const key = 'mktpacket_' + 'time_on_website';
+    const savedTime = parseInt(sessionStorage.getItem(key), 10);
+    let totalTime = isNaN(savedTime) ? 0 : savedTime;
+    const startTime = Date.now();
+
+    const updateTime = () => {
+      const now = Date.now();
+      const sessionTime = Math.floor((now - startTime) / 1000);
+      const currentTotal = totalTime + sessionTime;
+      mktpacket.data.user.time_on_website = currentTotal;
+      sessionStorage.setItem(key, currentTotal);
+    };
+
+    const interval = setInterval(updateTime, 1000);
+
+    window.addEventListener('beforeunload', () => {
+      updateTime();
+      clearInterval(interval);
+    });
+  },
+
   // Marketing Data
   getAdClick: function () {
     const adList = ['click_id', 'li_click_id', 'pinid', 'rid', 'tid', 'scid', 'msclkid', 'dclid', 'twclid', 'ttclid', 'fbclid', 'gclid'];
@@ -342,6 +442,9 @@ mktpacket.func = {
   getUserIP: function() {
     mktpacket.func.auxAPIConnect(function () { mktpacket.data.user.ip = mktpacket.ctrl.api_response }, 'getUserIP');
   },
+  getUserISP: function() {
+    mktpacket.func.auxAPIConnect(function () { mktpacket.data.user.isp = mktpacket.ctrl.api_response }, 'getUserISP');
+  },
   getUserUniqueID: function() {
     mktpacket.func.auxAPIConnect(function () { 
       mktpacket.data.user.uuid = mktpacket.ctrl.api_response;
@@ -358,18 +461,24 @@ mktpacket.func = {
     this.getPageLanguage();
     this.getPageParameters();
     this.getPageReferrer();
-    
+    this.getPageClickCount();
+
+    this.getClientNetwork();
     this.getClientPlatform();
     this.getClientTimezone();
     this.getClientBrowserName();
     this.getClientBrowserLanguage();
     this.getClientIsMobile();
     this.getClientIsTouchscreen();
+    this.getClientScreenOrientation();
+    this.getClientBatteryStatus();
     
     this.getUserIsBot();
     this.getUserHasAdblock();
     this.getUserFirstGlobalPage();
     this.getUserFirstSessionPage();
+    this.getUserTimeOnPage();
+    this.getUserTimeOnWebsite();
     
     this.getAdClick();
     this.getABTasty();
