@@ -15,7 +15,7 @@ mktpacket = {
   ctrl: {
     api_key: document.currentScript.getAttribute('key')??'free-version',
     gtag_id: document.currentScript.getAttribute('gtag')??'',
-    persist: ['uuid', 'first_global_page', 'first_session_page', 'session_referrer', 'global_referrer']
+    persist: ['uuid', 'first_page_local', 'first_page_session', 'referrer_local', 'referrer_session']
   }
 };
 
@@ -37,23 +37,41 @@ mktpacket.func = {
   getPageLanguage: function () {
     mktpacket.data.page.language = document.documentElement.lang ? document.documentElement.lang : 'no_language';
   },
-  getPageSessionReferrer: function () {
-    if (sessionStorage.getItem('mktpacket_session_referrer') !== null) {
-      mktpacket.data.page.session_referrer = sessionStorage.getItem('mktpacket_' + 'session_referrer');
+  getPageMetadata: function() {
+    const metadata = {};
+    const metaTags = document.getElementsByTagName('meta');
+    for (let meta of metaTags) {
+      const nameAttr = meta.getAttribute('name');
+      const propertyAttr = meta.getAttribute('property');
+      const content = meta.getAttribute('content');
+
+      if (content) {
+        if (nameAttr) {
+          metadata[nameAttr] = content;
+        } else if (propertyAttr) {
+          metadata[propertyAttr] = content;
+        }
+      }
+    }
+    mktpacket.data.page.metadata = metadata;
+  },
+  getPageReferrerSession: function () {
+    if (sessionStorage.getItem('mktpacket_referrer_session') !== null) {
+      mktpacket.data.page.referrer_session = sessionStorage.getItem('mktpacket_' + 'referrer_session');
     } else {
-      mktpacket.data.page.session_referrer = document.referrer && !document.referrer.includes(document.location.hostname) ? document.referrer : 'no_referrer';
-      if (mktpacket.ctrl.persist.includes('session_referrer')) {
-        sessionStorage.setItem('mktpacket_' + 'session_referrer', mktpacket.data.page.session_referrer);
+      mktpacket.data.page.referrer_session = document.referrer && !document.referrer.includes(document.location.hostname) ? document.referrer : 'no_referrer';
+      if (mktpacket.ctrl.persist.includes('referrer_session')) {
+        sessionStorage.setItem('mktpacket_' + 'referrer_session', mktpacket.data.page.referrer_session);
       }
     }
   },
-  getPageGlobalReferrer: function() {
-    if (localStorage.getItem('mktpacket_global_referrer') !== null) {
-        mktpacket.data.page.global_referrer = localStorage.getItem('mktpacket_' + 'global_referrer');
+  getPageReferrerLocal: function() {
+    if (localStorage.getItem('mktpacket_referrer_local') !== null) {
+        mktpacket.data.page.referrer_local = localStorage.getItem('mktpacket_' + 'referrer_local');
     } else {
-      mktpacket.data.page.global_referrer = document.referrer && !document.referrer.includes(document.location.hostname) ? document.referrer : 'no_referrer';
-      if (mktpacket.ctrl.persist.includes('global_referrer')) {
-        localStorage.setItem('mktpacket_' + 'global_referrer', mktpacket.data.page.global_referrer);
+      mktpacket.data.page.referrer_local = document.referrer && !document.referrer.includes(document.location.hostname) ? document.referrer : 'no_referrer';
+      if (mktpacket.ctrl.persist.includes('referrer_local')) {
+        localStorage.setItem('mktpacket_' + 'referrer_local', mktpacket.data.page.referrer_local);
       }
     }
   },
@@ -254,23 +272,23 @@ mktpacket.func = {
       mktpacket.data.user.has_adblock = true;
     });
   },
-  getUserFirstGlobalPage: function() {
-    if (localStorage.getItem('mktpacket_' + 'first_global_page') !== null) {
-        mktpacket.data.user.first_global_page = localStorage.getItem('mktpacket_' + 'first_global_page');
+  getUserFirstPageLocal: function() {
+    if (localStorage.getItem('mktpacket_' + 'first_page_local') !== null) {
+        mktpacket.data.user.first_page_local = localStorage.getItem('mktpacket_' + 'first_page_local');
     } else {
-      mktpacket.data.user.first_global_page = document.URL;
-      if (mktpacket.ctrl.persist.includes('first_global_page')) {
-        localStorage.setItem('mktpacket_' + 'first_global_page', mktpacket.data.user.first_global_page);
+      mktpacket.data.user.first_page_local = document.URL;
+      if (mktpacket.ctrl.persist.includes('first_page_local')) {
+        localStorage.setItem('mktpacket_' + 'first_page_local', mktpacket.data.user.first_page_local);
       }
     }
   },
-  getUserFirstSessionPage: function() {
-    if (sessionStorage.getItem('mktpacket_' + 'first_session_page') !== null) {
-        mktpacket.data.user.first_session_page = sessionStorage.getItem('mktpacket_' + 'first_session_page');
+  getUserFirstPageSession: function() {
+    if (sessionStorage.getItem('mktpacket_' + 'first_page_session') !== null) {
+        mktpacket.data.user.first_page_session = sessionStorage.getItem('mktpacket_' + 'first_page_session');
     } else {
-      mktpacket.data.user.first_session_page = document.URL;
-      if (mktpacket.ctrl.persist.includes('first_session_page')) {
-        sessionStorage.setItem('mktpacket_' + 'first_session_page', mktpacket.data.user.first_session_page);
+      mktpacket.data.user.first_page_session = document.URL;
+      if (mktpacket.ctrl.persist.includes('first_page_session')) {
+        sessionStorage.setItem('mktpacket_' + 'first_page_session', mktpacket.data.user.first_page_session);
       }
     }
   },
@@ -489,9 +507,10 @@ mktpacket.func = {
     this.getPageTitle();
     this.getPageLanguage();
     this.getPageParameters();
-    this.getPageGlobalReferrer();
-    this.getPageSessionReferrer();
+    this.getPageReferrerLocal();
+    this.getPageReferrerSession();
     this.getPageClickCount();
+    this.getPageMetadata();
 
     this.getClientNetwork();
     this.getClientPlatform();
@@ -505,8 +524,8 @@ mktpacket.func = {
     
     this.getUserIsBot();
     this.getUserHasAdblock();
-    this.getUserFirstGlobalPage();
-    this.getUserFirstSessionPage();
+    this.getUserFirstPageLocal();
+    this.getUserFirstPageSession();
     this.getUserTimeOnPage();
     this.getUserTimeOnWebsite();
     
