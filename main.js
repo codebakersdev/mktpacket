@@ -1,5 +1,5 @@
 /*!
- * mktpacket - v0.8.29
+ * mktpacket - v0.8.30
  * Copyright (c) 2025 - CodeBakers
  * Licensed under our Custom License.
  * See the LICENSE file in the project root for more information.
@@ -22,75 +22,80 @@ mktpacket = {
 mktpacket.func = {
   
   // Page Data
-  getPageLoadTime: function() {
-    mktpacket.data.page.load_time = Math.floor(performance.getEntriesByType("navigation")[0].duration);
-  },
   getPageStatus: function() {
-    mktpacket.data.page.status = performance.getEntriesByType('navigation')[0].responseStatus;
+    mktpacket.data.page.status = (performance.getEntriesByType('navigation')[0]?.responseStatus) ?? 'unsupported';
   },
+
+  getPageLoadTime: function() {
+    mktpacket.data.page.load_time = Math.floor(performance.getEntriesByType("navigation")[0].duration) ?? 'unsupported';
+  },
+
   getPageUrl: function () {
     mktpacket.data.page.url = window.location.href;
   },
+
+  getPageAnchor: function () {
+      const anchor = window.location.href.split('#')[1];
+      anchor && (mktpacket.data.page.anchor = anchor);
+  },
+
   getPageTitle: function () {
     mktpacket.data.page.title = document.title ? document.title : 'no_title';
   },
+
   getPageLanguage: function () {
     mktpacket.data.page.language = document.documentElement.lang ? document.documentElement.lang : 'no_language';
   },
+
   getPageMetadata: function() {
     const metadata = {};
     const metaTags = document.getElementsByTagName('meta');
-    for (let meta of metaTags) {
-      const nameAttr = meta.getAttribute('name');
-      const propertyAttr = meta.getAttribute('property');
+    for (const meta of metaTags) {
+      const key = meta.getAttribute('name') || meta.getAttribute('property');
       const content = meta.getAttribute('content');
+      if (key && content) {
+        metadata[key] = content;
+      }
+    }
+    if(Object.keys(metadata).length) {
+      mktpacket.data.page.metadata = metadata;
+    }
+  },
 
-      if (content) {
-        if (nameAttr) {
-          metadata[nameAttr] = content;
-        } else if (propertyAttr) {
-          metadata[propertyAttr] = content;
-        }
+  getPageReferrer: function (storageType = 'session') {
+    const storage = storageType === 'local' ? localStorage : sessionStorage;
+    const keySuffix = storageType === 'local' ? 'referrer_local' : 'referrer_session';
+    const storageKey = 'mktpacket_' + keySuffix;
+    let referrer = storage.getItem(storageKey);
+    if (referrer === null) {
+      const isExternalRef = document.referrer && !document.referrer.includes(location.hostname);
+      referrer = isExternalRef ? document.referrer : 'no_referrer';
+
+      if (mktpacket.ctrl.persist.includes(keySuffix)) {
+        storage.setItem(storageKey, referrer);
       }
     }
-    mktpacket.data.page.metadata = metadata;
+    mktpacket.data.page[keySuffix] = referrer;
   },
-  getPageReferrerSession: function () {
-    if (sessionStorage.getItem('mktpacket_referrer_session') !== null) {
-      mktpacket.data.page.referrer_session = sessionStorage.getItem('mktpacket_' + 'referrer_session');
-    } else {
-      mktpacket.data.page.referrer_session = document.referrer && !document.referrer.includes(document.location.hostname) ? document.referrer : 'no_referrer';
-      if (mktpacket.ctrl.persist.includes('referrer_session')) {
-        sessionStorage.setItem('mktpacket_' + 'referrer_session', mktpacket.data.page.referrer_session);
-      }
-    }
-  },
-  getPageReferrerLocal: function() {
-    if (localStorage.getItem('mktpacket_referrer_local') !== null) {
-        mktpacket.data.page.referrer_local = localStorage.getItem('mktpacket_' + 'referrer_local');
-    } else {
-      mktpacket.data.page.referrer_local = document.referrer && !document.referrer.includes(document.location.hostname) ? document.referrer : 'no_referrer';
-      if (mktpacket.ctrl.persist.includes('referrer_local')) {
-        localStorage.setItem('mktpacket_' + 'referrer_local', mktpacket.data.page.referrer_local);
-      }
-    }
-  },
+
   getPageParameters: function () {
-    var urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.keys().next().value !== undefined && urlParams.keys().next()) {
-      var parameters = {};
-      for (var param of urlParams.keys()) {
-          parameters[param] = urlParams.get(param);
-      }
+    const urlParams = new URLSearchParams(window.location.search);
+    const parameters = {};
+
+    for (const [key, value] of urlParams.entries()) {
+      parameters[key] = value;
+    }
+
+    if (Object.keys(parameters).length) {
       mktpacket.data.page.parameters = parameters;
     }
   },
+
   getPageColors: function () {
     let includeZeroWidth = false;
     let allColors = {};
     let props = ["background-color", "color", "border-top-color", "border-right-color", "border-bottom-color", "border-left-color"];
     let skipColors = { "rgb(0, 0, 0)": 1, "rgba(0, 0, 0, 0)": 1, "rgb(255, 255, 255)": 1 };
-
     [].forEach.call(document.querySelectorAll("*"), function (node) {
         var nodeColors = {};
         props.forEach(function (prop) {
@@ -107,13 +112,13 @@ mktpacket.func = {
             } 
         });
     });
-
     mktpacket.data.page.colors = Object.entries(allColors).map(([rgba, { count }]) => {
         var rgb = rgba.match(/\d+/g).slice(0, 3).map(Number);
         var hex = "#" + rgb.map(c => (c < 16 ? "0" : "") + c.toString(16)).join("");
         return { rgba: rgba, hex: hex, elements_count: count };
     }).sort((a, b) => b.elements_count - a.elements_count);
   },
+
   getPageClickCount: function () {
     if (!mktpacket.data.page.click_count) {
       mktpacket.data.page.click_count = {};
@@ -121,39 +126,32 @@ mktpacket.func = {
 
     document.addEventListener('click', function (event) {
       const el = event.target;
-
-      // Build a descriptor
       let descriptor = el.tagName.toLowerCase();
       if (el.id) {
         descriptor += `#${el.id}`;
       } else if (el.className && typeof el.className === 'string') {
         descriptor += '.' + el.className.trim().split(/\s+/).join('.');
       }
-
-      // Add inner text snippet for generic tags
       if (descriptor === 'div' || descriptor === 'span') {
         descriptor += '[inner="' + el.innerText.trim().slice(0, 20) + '"]';
       }
-
-      // Initialize if needed
       if (!mktpacket.data.page.click_count[descriptor]) {
         mktpacket.data.page.click_count[descriptor] = {
           count: 0,
           last_click_timestamp: null
         };
       }
-
-      // Update values
       const clickData = mktpacket.data.page.click_count[descriptor];
       clickData.count++;
-      clickData.last_click_timestamp = Math.floor(Date.now() / 1000); // Unix time in seconds
+      clickData.last_click_timestamp = Math.floor(Date.now() / 1000);
     });
   },
   
   // Client Data
   getClientIsTouchscreen:function() {
-    mktpacket.data.client.is_touchscreen = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0) ? true : false;;
+    mktpacket.data.client.is_touchscreen = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0) ? true : false;
   },
+
   getClientIsMobile: function() {
     if (navigator.userAgentData && 'mobile' in navigator.userAgentData) {
       mktpacket.data.client.is_mobile = navigator.userAgentData.mobile;
@@ -162,9 +160,11 @@ mktpacket.func = {
       mktpacket.data.client.is_mobile = /iphone|ipod|android|blackberry|iemobile|opera mini/.test(ua);
     }
   },
+
   getClientScreenOrientation:function() {
     mktpacket.data.client.screen_orientation = screen.orientation.type;
   },
+
   getClientPlatform: function() {
       const userAgent = navigator.userAgent;
       const platforms = [
@@ -182,7 +182,6 @@ mktpacket.func = {
         { name: 'honeywell', pattern: /CT50/i },
         { name: 'zebra', pattern: /TC70|TC55/i }
       ];
-  
       let client_platform = 'unknown';
       for (const platform of platforms) {
           if (platform.pattern.test(userAgent)) {
@@ -190,9 +189,9 @@ mktpacket.func = {
               break;
           }
       }
-  
       mktpacket.data.client.platform = client_platform;
   },
+
   getClientBrowserName: function() {
       const userAgent = navigator.userAgent;
       const browsers = [
@@ -203,7 +202,6 @@ mktpacket.func = {
         { name: 'opera', patterns: ['Opera', 'Opr'] },
         { name: 'vivaldi', patterns: ['Vivaldi'] },
       ];
-  
       let client_browser_name = 'unknown';
       for (const browser of browsers) {
           if (browser.patterns.some(pattern => userAgent.includes(pattern))) {
@@ -213,12 +211,15 @@ mktpacket.func = {
       }
       mktpacket.data.client.browser_name = client_browser_name;
   },
+
   getClientBrowserLanguage: function() {
     mktpacket.data.client.browser_language = navigator.language;
   },
+
   getClientTimezone: function() {
     mktpacket.data.client.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   },
+
   getClientBatteryStatus: function() {
     if (navigator.getBattery) {
       navigator.getBattery().then(function(battery) {
@@ -233,15 +234,15 @@ mktpacket.func = {
       mktpacket.data.client.battery = 'no_information';
     }
   },
+
   getClientNetwork: function () {
     const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-
     if (connection) {
       mktpacket.data.client.network = {
-        effective_type: connection.effectiveType || null, // '4g', '3g', etc.
-        downlink: connection.downlink || null,           // Mbps estimate
-        rtt: connection.rtt || null,                     // Round-trip time in ms
-        save_data: connection.saveData || false          // True if user enabled data saver
+        effective_type: connection.effectiveType || null,
+        downlink: connection.downlink || null,
+        rtt: connection.rtt || null,
+        save_data: connection.saveData || false
       };
     } else {
       mktpacket.data.client.network = 'no_information';
@@ -263,6 +264,7 @@ mktpacket.func = {
 
     mktpacket.data.user.is_bot = is_bot_navigator || is_bot_useragent;
   },
+
   getUserHasAdblock: function() {
     fetch('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', {
         mode: 'no-cors'
@@ -272,26 +274,24 @@ mktpacket.func = {
       mktpacket.data.user.has_adblock = true;
     });
   },
-  getUserFirstPageLocal: function() {
-    if (localStorage.getItem('mktpacket_' + 'first_page_local') !== null) {
-        mktpacket.data.user.first_page_local = localStorage.getItem('mktpacket_' + 'first_page_local');
-    } else {
-      mktpacket.data.user.first_page_local = document.URL;
-      if (mktpacket.ctrl.persist.includes('first_page_local')) {
-        localStorage.setItem('mktpacket_' + 'first_page_local', mktpacket.data.user.first_page_local);
+
+  getUserFirstPage: function (storageType = 'session') {
+    const storage = storageType === 'local' ? localStorage : sessionStorage;
+    const keySuffix = storageType === 'local' ? 'first_page_local' : 'first_page_session';
+    const storageKey = 'mktpacket_' + keySuffix;
+
+    let firstPage = storage.getItem(storageKey);
+
+    if (firstPage === null) {
+      firstPage = document.URL;
+      if (mktpacket.ctrl.persist.includes(keySuffix)) {
+        storage.setItem(storageKey, firstPage);
       }
     }
+
+    mktpacket.data.user[keySuffix] = firstPage;
   },
-  getUserFirstPageSession: function() {
-    if (sessionStorage.getItem('mktpacket_' + 'first_page_session') !== null) {
-        mktpacket.data.user.first_page_session = sessionStorage.getItem('mktpacket_' + 'first_page_session');
-    } else {
-      mktpacket.data.user.first_page_session = document.URL;
-      if (mktpacket.ctrl.persist.includes('first_page_session')) {
-        sessionStorage.setItem('mktpacket_' + 'first_page_session', mktpacket.data.user.first_page_session);
-      }
-    }
-  },
+
   getUserTimeOnPage: function () {
     const startTime = Date.now();
     const updateTime = () => {
@@ -305,6 +305,7 @@ mktpacket.func = {
       clearInterval(interval);
     });
   },
+
   getUserTimeOnWebsite: function () {
     const key = 'mktpacket_' + 'time_on_website';
     const savedTime = parseInt(sessionStorage.getItem(key), 10);
@@ -325,6 +326,13 @@ mktpacket.func = {
       updateTime();
       clearInterval(interval);
     });
+  },
+  getUserIsReturning: function() {
+    const hasVisited = localStorage.getItem('mktpacket_' + 'user_returning') === 'true';
+    mktpacket.data.user.is_returning = hasVisited;
+    if (!hasVisited) {
+      localStorage.setItem('mktpacket_' + 'user_returning', 'true');
+    }
   },
 
   // Marketing Data
@@ -371,7 +379,7 @@ mktpacket.func = {
       mktpacket.data.onetrust = {
         google_consent: OneTrust.GetDomainData().GoogleConsent,
         get active_groups() {
-            return getActiveGroups(); // Dynamic value
+            return getActiveGroups();
         }
       };
     }
@@ -400,6 +408,64 @@ mktpacket.func = {
   },
   
   // Aux Functions
+  auxTrackFormSubmissions: function() {
+    mktpacket.data.page.form = {};
+    const stored = localStorage.getItem('mktpacket_form_data');
+    if (stored) {
+      try {
+        mktpacket.data.page.form = JSON.parse(stored);
+      } catch {
+        mktpacket.data.page.form = { prev_submitted: false };
+      }
+    } else {
+      mktpacket.data.page.form.prev_submitted = false;
+    }
+
+    function storeFormSubmission(form) {
+      mktpacket.data.page.form.prev_submitted = true;
+      mktpacket.data.page.form.id = form.id || null;
+      mktpacket.data.page.form.url = window.location.href || null;
+      mktpacket.data.page.form.timestamp = Math.floor(Date.now() / 1000);
+      localStorage.setItem('mktpacket_form_data', JSON.stringify(mktpacket.data.page.form));
+    }
+
+    // 1. Native submit event
+    document.addEventListener('submit', function(event) {
+      const form = event.target;
+      if (form.tagName.toLowerCase() === 'form') {
+        storeFormSubmission(form);
+      }
+    }, true);
+
+    // 2. Intercept clicks on submit buttons (for AJAX forms)
+    document.addEventListener('click', function(event) {
+      const btn = event.target.closest('button[type="submit"], input[type="submit"]');
+      if (!btn) return;
+      const form = btn.closest('form');
+      if (form) {
+        setTimeout(() => {
+          storeFormSubmission(form);
+        }, 100);
+      }
+    }, true);
+
+    // 3. Optional: Intercept fetch() for deep AJAX tracking
+    if (window.fetch) {
+      const origFetch = window.fetch;
+      window.fetch = function(...args) {
+        const [resource, config] = args;
+        if (config && config.method && config.method.toUpperCase() === 'POST') {
+          const forms = document.querySelectorAll('form');
+          const visibleForm = Array.from(forms).find(f => f.offsetParent !== null);
+          if (visibleForm) {
+            storeFormSubmission(visibleForm);
+          }
+        }
+        return origFetch.apply(this, args);
+      };
+    }
+  },
+
   auxGTagObserver: function (callback) {
     if (typeof gtag === 'function') {
         callback();
@@ -419,6 +485,7 @@ mktpacket.func = {
         gtagobserver.disconnect();
     }, 5000);
   },
+
   auxPageURLObserver: function (callback) {
     callback(window.location.href);
     const checkUrlChange = () => {
@@ -432,43 +499,47 @@ mktpacket.func = {
       window.removeEventListener('hashchange', checkUrlChange);
     };
   },
-  auxAPIConnect: function (callback, func_name = 'getAllData', forceUpdate = false) {
+
+  auxAPIConnect: function (callback, func_name = 'getAllData') {
     const api_key = mktpacket.ctrl.api_key;
-    if (api_key !== null && api_key !== '') {
-      const apiUrl = 'https://codebakers.dev/apis/mktpacket/';
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        if (xhr.status === 200) {
-          let jsonResponse = xhr.response;
-          if (jsonResponse) {
-            mktpacket.func.auxObjectMerge(mktpacket, jsonResponse, forceUpdate);
-            callback ? callback() : '';
-          }
-        } else {
-          console.error('API call failed: ', xhr.status);
+    if (!api_key) return;
+    const apiUrl = 'https://codebakers.dev/apis/mktpacket/';
+    const xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        const jsonResponse = xhr.response;
+        if (jsonResponse) {
+          const usePersistedValues = (func_name === 'getAllData');
+          mktpacket.func.auxObjectMerge(mktpacket, jsonResponse, usePersistedValues);
+          if (callback) callback();
         }
-      };
-      xhr.open('POST', apiUrl, true);
-      xhr.responseType = 'json';
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      xhr.send(JSON.stringify({ key: api_key, func: func_name }));
-    }
-  },
-  auxObjectMerge: function (target, source, forceUpdate = false) {
-    for (const key of Object.keys(source)) {
-      if (source[key] instanceof Object && key in target && typeof target[key] === 'object') {
-        mktpacket.func.auxObjectMerge(target[key], source[key], forceUpdate);
       } else {
-        if (mktpacket.ctrl.persist.includes(key)) {
+        console.error('API call failed: ', xhr.status);
+      }
+    };
+
+    xhr.open('POST', apiUrl, true);
+    xhr.responseType = 'json';
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({ key: api_key, func: func_name }));
+  },
+  auxObjectMerge: function (target, source, usePersistedValues = true) {
+    for (const key of Object.keys(source)) {
+      const valueFromSource = source[key];
+      if (valueFromSource instanceof Object && key in target && typeof target[key] === 'object') {
+        mktpacket.func.auxObjectMerge(target[key], valueFromSource, usePersistedValues);
+      } else {
+        const shouldPersist = mktpacket.ctrl.persist.includes(key);
+        if (shouldPersist) {
           const persistedValue = localStorage.getItem('mktpacket_' + key);
-          if (!forceUpdate && persistedValue !== null) {
+          if (usePersistedValues && persistedValue !== null) {
             target[key] = persistedValue;
           } else {
-            target[key] = source[key];
-            localStorage.setItem('mktpacket_' + key, source[key]);
+            target[key] = valueFromSource;
+            localStorage.setItem('mktpacket_' + key, valueFromSource);
           }
         } else {
-          target[key] = source[key];
+          target[key] = valueFromSource;
         }
       }
     }
@@ -507,8 +578,8 @@ mktpacket.func = {
     this.getPageTitle();
     this.getPageLanguage();
     this.getPageParameters();
-    this.getPageReferrerLocal();
-    this.getPageReferrerSession();
+    this.getPageReferrer('local');
+    this.getPageReferrer('session');
     this.getPageClickCount();
     this.getPageMetadata();
 
@@ -524,10 +595,11 @@ mktpacket.func = {
     
     this.getUserIsBot();
     this.getUserHasAdblock();
-    this.getUserFirstPageLocal();
-    this.getUserFirstPageSession();
+    this.getUserFirstPage('local');
+    this.getUserFirstPage('session');
     this.getUserTimeOnPage();
     this.getUserTimeOnWebsite();
+    this.getUserIsReturning();
     
     this.getAdClick();
     this.getABTasty();
@@ -538,6 +610,7 @@ mktpacket.func = {
     });
     this.auxPageURLObserver(() => {
       this.getPageUrl();
+      this.getPageAnchor();
       this.getPageTitle();
       this.getUserHasAdblock();
       this.getABTasty();
@@ -554,6 +627,7 @@ window.addEventListener('load', function(){
       mktpacket.func.getABTasty();
       mktpacket.func.getPageColors();
       mktpacket.func.auxReadyEvent();
+      mktpacket.func.auxTrackFormSubmissions();
       console.log(mktpacket.data);
     }, 0);
 });
