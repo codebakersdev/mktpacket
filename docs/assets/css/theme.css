@@ -12492,7 +12492,7 @@ a.text-link:hover {
 }
 .docs-article .docs-section {
   padding: 2rem 0;
-  border-bottom: 1px solid rgb(231, 233, 236.5);
+  /*border-bottom: 1px solid $theme-divider;*/
   scroll-margin-top: 69px;
   scroll-snap-margin-top: 69px;
 }

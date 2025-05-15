@@ -1,5 +1,5 @@
 /*!
- * mktpacket - v0.8.32
+ * mktpacket - v0.8.33
  * Copyright (c) 2025 - CodeBakers
  * Licensed under our Custom License.
  * See the LICENSE file in the project root for more information.
@@ -231,10 +231,10 @@ mktpacket.func = {
           dischargingTime: battery.dischargingTime
         };
       });
+      setTimeout(window.mktpacket.func.getClientBatteryStatus, 1000);
     } else {
       mktpacket.data.client.battery = 'no_information';
     }
-    setTimeout(window.mktpacket.func.getClientBatteryStatus, 1000);
   },
 
   getClientNetwork: function () {
@@ -246,10 +246,10 @@ mktpacket.func = {
         rtt: connection.rtt || null,
         save_data: connection.saveData || false
       };
+      setTimeout(window.mktpacket.func.getClientNetwork, 1000);
     } else {
       mktpacket.data.client.network = 'no_information';
     }
-    setTimeout(window.mktpacket.func.getClientNetwork, 1000);
   },
   
   // User Data
