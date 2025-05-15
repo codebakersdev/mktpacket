@@ -1,5 +1,5 @@
 /*!
- * mktpacket - v0.8.30
+ * mktpacket - v0.8.32
  * Copyright (c) 2025 - CodeBakers
  * Licensed under our Custom License.
  * See the LICENSE file in the project root for more information.
@@ -8,8 +8,8 @@
 window.dataLayer = window.dataLayer || [];
 mktpacket = {
   data: {
-    page: {},
     client: {},
+    page: {},
     user: {}
   },
   ctrl: {
@@ -132,7 +132,7 @@ mktpacket.func = {
       } else if (el.className && typeof el.className === 'string') {
         descriptor += '.' + el.className.trim().split(/\s+/).join('.');
       }
-      if (descriptor === 'div' || descriptor === 'span' || descriptor === 'p') {
+      if (descriptor === 'div' || descriptor === 'span' || descriptor === 'p' || descriptor === 'a') {
         descriptor += '[inner="' + el.innerText.trim().slice(0, 15) + '"]';
       }
       if (!mktpacket.data.page.click_count[descriptor]) {

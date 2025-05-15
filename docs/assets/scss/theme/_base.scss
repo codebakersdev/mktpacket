@@ -1,6 +1,10 @@
 /* ============= Base ============= */
 
 /*********** Theme Generic **********/
+html {
+  scroll-padding-top: 80px; /* match your header height */
+}
+
 body {
     font-family: 'Poppins', sans-serif;
     -webkit-font-smoothing: antialiased;
