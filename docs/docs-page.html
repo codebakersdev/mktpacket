@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en"> 
 <head>
-    <title>CoderDocs - Bootstrap Documentation Template For Software Projects</title>
+    <title>mktpacket - simple webdev helper</title>
     
     <!-- Meta -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <meta name="description" content="Bootstrap Documentation Template For Software Developers">
-    <meta name="author" content="Xiaoying Riley at 3rd Wave Media">    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="mktpacket library docs">
+    <meta name="author" content="CodeBakers.dev">      
     <link rel="shortcut icon" href="favicon.ico"> 
     
     <!-- Google Font -->
@@ -36,7 +36,7 @@
 	                    <span></span>
 	                    <span></span>
 	                </button>
-	                <div class="site-logo"><a class="navbar-brand" href="index.html"><img class="logo-icon me-2" src="assets/images/coderdocs-logo.svg" alt="logo"><span class="logo-text">Coder<span class="text-alt">Docs</span></span></a></div>    
+	                <div class="site-logo"><a class="navbar-brand" href="index.html"><span class="logo-text">mktpacket <span class="text-alt">Docs</span></span></a></div>        
                 </div><!--//docs-logo-wrapper-->
 	            <div class="docs-top-utilities d-flex justify-content-end align-items-center">
 	                <div class="top-search-box d-none d-lg-flex">
@@ -47,12 +47,11 @@
 	                </div>
 	
 					<ul class="social-list list-inline mx-md-3 mx-lg-5 mb-0 d-none d-lg-flex">
-						<li class="list-inline-item"><a href="#"><i class="fa-brands fa-github fa-fw"></i></a></li>
-			            <li class="list-inline-item"><a href="#"><i class="fa-brands fa-x-twitter fa-fw"></i></a></li>
-		                <li class="list-inline-item"><a href="#"><i class="fa-brands fa-slack fa-fw"></i></a></li>
-		                <li class="list-inline-item"><a href="#"><i class="fa-brands fa-product-hunt fa-fw"></i></a></li>
+	           			<li class="list-inline-item"><a href="https://www.instagram.com/codebakers_dev/" target="_blank"><i class="fa-brands fa-instagram fa-fw"></i></a></li>
+						<li class="list-inline-item"><a href="https://github.com/codebakersdev/mktpacket" target="_blank"><i class="fa-brands fa-github fa-fw"></i></a></li>
 		            </ul><!--//social-list-->
-		            <a href="https://themes.3rdwavemedia.com/bootstrap-templates/startup/coderdocs-free-bootstrap-5-documentation-template-for-software-projects/" class="btn btn-primary d-none d-lg-flex">Download</a>
+		            <a href="http://localhost/mktpacket/htdocs/docs/docs-page.html#section-2" class="btn btn-primary d-none d-lg-flex me-1">Free Download</a> 
+		            <a href="#" class="btn btn-warning d-none d-md-flex">Get PRO</a>
 	            </div><!--//docs-top-utilities-->
             </div><!--//container-->
         </div><!--//branding-->
@@ -69,7 +68,7 @@
             </div>
 		    <nav id="docs-nav" class="docs-nav navbar">
 			    <ul class="section-items list-unstyled nav flex-column pb-3">
-				    <li class="nav-item section-title"><a class="nav-link scrollto active" href="#section-1"><span class="theme-icon-holder me-2"><i class="fas fa-map-signs"></i></span>Introduction</a></li>
+				    <li class="nav-item section-title"><a class="nav-link scrollto active" href="#intro"><span class="theme-icon-holder me-2"><i class="fas fa-map-signs"></i></span>Introduction</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-1-1">Section Item 1.1</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-1-2">Section Item 1.2</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-1-3">Section Item 1.3</a></li>
@@ -114,12 +113,25 @@
 	    </div><!--//docs-sidebar-->
 	    <div class="docs-content">
 		    <div class="container">
-			    <article class="docs-article" id="section-1">
+			    <article class="docs-article" id="intro">
 				    <header class="docs-header">
-					    <h1 class="docs-heading">Introduction <span class="docs-time">Last updated: 3 days ago</span></h1>
+					    <h1 class="docs-heading">Introduction <span class="docs-time">Last updated: May 15 - 2025</span></h1>
 					    <section class="docs-intro">
-						    <p>Section intro goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque finibus condimentum nisl id vulputate. Praesent aliquet varius eros interdum suscipit. Donec eu purus sed nibh convallis bibendum quis vitae turpis. Duis vestibulum diam lorem, vitae dapibus nibh facilisis a. Fusce in malesuada odio.</p>
+						    <h5>Overview</h5>
+							<p>This web helper library is designed to streamline the collection of key user, client, and page-level data for marketing and analytics purposes. 
+								By providing a lightweight and extensible JavaScript toolkit, it enables developers and marketers to easily gather information such as browser details, device type, screen resolution, geolocation, referral source, UTM parameters, and page metadata. 
+								The goal is to provide meaningful insights into user behavior and campaign performance without requiring heavy third-party dependencies or bloated tracking scripts.</p>
+
+							<h5>Purpose</h5>
+							<p>Whether you're building custom analytics dashboards, personalizing user experiences, or enhancing conversion tracking, this library offers a flexible foundation to support your data needs. 
+								It is ideal for developers looking to maintain control over their data pipelines while reducing reliance on third-party tracking services. 
+								With a focus on privacy compliance and performance, the library ensures that you can collect the data you need efficiently and responsibly.</p>
 						</section><!--//docs-intro-->
+
+						<div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="json hljs"><span id="fillObject" class="hljs-string"></span>
+</code></pre>
+						</div><!--//docs-code-block-->
 						
 						<h5>Github Code Example:</h5>
 						<p>You can <a class="theme-link" href="https://gist.github.com/"  target="_blank">embed your code snippets using Github gists</a></p>
@@ -689,6 +701,23 @@
     <script src="assets/plugins/simplelightbox/simple-lightbox.min.js"></script>      
     <script src="assets/plugins/gumshoe/gumshoe.polyfills.min.js"></script> 
     <script src="assets/js/docs.js"></script> 
+
+	
+	<script src="https://cdn.jsdelivr.net/gh/codebakersdev/mktpacket@master/main.js" key="free-version" gtag=""></script>
+	<script>
+	// Poll mktpacket.data every 1 second and display it
+	function displayMktPacketData() {
+		const codeBlock = document.querySelector('.docs-code-block code #fillObject');
+
+		if (codeBlock && window.mktpacket && typeof mktpacket.data === 'object') {
+		codeBlock.textContent = '"mktpacket": ' + JSON.stringify(mktpacket, null, 2);
+		}
+	}
+
+	// Initial call and start interval
+	displayMktPacketData();
+	setInterval(displayMktPacketData, 1000);
+	</script>
 
 </body>
 </html> 

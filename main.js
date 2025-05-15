@@ -132,8 +132,8 @@ mktpacket.func = {
       } else if (el.className && typeof el.className === 'string') {
         descriptor += '.' + el.className.trim().split(/\s+/).join('.');
       }
-      if (descriptor === 'div' || descriptor === 'span') {
-        descriptor += '[inner="' + el.innerText.trim().slice(0, 20) + '"]';
+      if (descriptor === 'div' || descriptor === 'span' || descriptor === 'p') {
+        descriptor += '[inner="' + el.innerText.trim().slice(0, 15) + '"]';
       }
       if (!mktpacket.data.page.click_count[descriptor]) {
         mktpacket.data.page.click_count[descriptor] = {
@@ -625,7 +625,7 @@ window.addEventListener('load', function(){
       mktpacket.func.getPageLoadTime();
       mktpacket.func.getPageStatus();
       mktpacket.func.getABTasty();
-      mktpacket.func.getPageColors();
+      //mktpacket.func.getPageColors();
       mktpacket.func.auxReadyEvent();
       mktpacket.func.auxTrackFormSubmissions();
       console.log(mktpacket.data);
