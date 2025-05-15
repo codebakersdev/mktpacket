@@ -163,6 +163,7 @@ mktpacket.func = {
 
   getClientScreenOrientation:function() {
     mktpacket.data.client.screen_orientation = screen.orientation.type;
+    setTimeout(window.mktpacket.func.getClientScreenOrientation, 1000);
   },
 
   getClientPlatform: function() {
@@ -233,6 +234,7 @@ mktpacket.func = {
     } else {
       mktpacket.data.client.battery = 'no_information';
     }
+    setTimeout(window.mktpacket.func.getClientBatteryStatus, 1000);
   },
 
   getClientNetwork: function () {
@@ -247,6 +249,7 @@ mktpacket.func = {
     } else {
       mktpacket.data.client.network = 'no_information';
     }
+    setTimeout(window.mktpacket.func.getClientNetwork, 1000);
   },
   
   // User Data

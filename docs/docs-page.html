@@ -69,13 +69,13 @@
 		    <nav id="docs-nav" class="docs-nav navbar">
 			    <ul class="section-items list-unstyled nav flex-column pb-3">
 				    <li class="nav-item section-title"><a class="nav-link scrollto active" href="#intro"><span class="theme-icon-holder me-2"><i class="fas fa-map-signs"></i></span>Introduction</a></li>
-				    <li class="nav-item"><a class="nav-link scrollto" href="#intro-overview">Overview</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#intro">Overview</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#intro-output">Output structure</a></li>
 				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#install"><span class="theme-icon-holder me-2"><i class="fas fa-arrow-down"></i></span>Installation</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#install-script">Script configuration</a></li>
 				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#datafunc"><span class="theme-icon-holder me-2"><i class="fas fa-laptop-code"></i></span>Data Functions</a></li>
-				    <li class="nav-item"><a class="nav-link scrollto" href="#datafunc-page">getPage[...]</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#datafunc-client">getClient[...]</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#datafunc-page">getPage[...]</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#datafunc-user">getUser[...]</a></li>
 				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#integration"><span class="theme-icon-holder me-2"><i class="fas fa-cogs"></i></span>Integrations</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-4-1">Section Item 4.1</a></li>
@@ -96,9 +96,9 @@
 	    <div class="docs-content">
 		    <div class="container">
 			    <article class="docs-article" id="intro">
-				    <header class="docs-header">
+				    <header id="intro-overview" class="docs-header">
 					    <h1 class="docs-heading">Introduction <span class="docs-time">Last updated: May 15 - 2025</span></h1>
-					    <section id="intro-overview" class="docs-intro">
+					    <section class="docs-intro">
 						    <h4>Overview</h4>
 							<p>This web helper library is designed to streamline the collection of key user, client, and page-level data for marketing and analytics purposes. 
 								By providing a lightweight and extensible JavaScript toolkit, it enables developers and marketers to easily gather information such as browser details, device type, screen resolution, geolocation, referral source, UTM parameters, and page metadata. 
@@ -108,8 +108,9 @@
 							<p>Whether you're building custom analytics dashboards, personalizing user experiences, or enhancing conversion tracking, this library offers a flexible foundation to support your data needs. 
 								It is ideal for developers looking to maintain control over their data pipelines while reducing reliance on third-party tracking services. 
 								With a focus on privacy compliance and performance, the library ensures that you can collect the data you need efficiently and responsibly.</p>
-
-							<h5 id="intro-output">Output structure</h5>
+				    </header>
+					<section class="docs-section" id="intro-output">
+						<h2 class="section-heading">Output structure</h2>
 							<p>This is a real-time example of the (not all, as some code like integrations are only visible when the corresponding third-party call is found) object output that can be invoked from any JS code present in the page.
 							<br>All of the data present hangs from parent <code>window.mktpacket</code> object. which is split in the following structure:
 							</p>
@@ -117,25 +118,64 @@
 								<li><code>data</code> contains the output of different sources packed in this unique object part organized in:</li>
 								<ul>
 									<li>
-										<code>page</code> is related to the page loaded, basics like title, url, metadata, and more advanced like click count on each element or if a form present in-page has been already submitted.
-									</li>
-									<li>
 										<code>client</code> collects the data related to user device and browser. It fetches battery, network and screen information.
 									</li>
 									<li>
-										<code>user</code> has all data about the user behaviour and unique information. You can check if an user is a potential bot, has adblock enabled, if it has already visited the website or what was his first page visited.
+										<code>page</code> is related to the page loaded, basics like title, url, metadata, and more advanced like click count on each element or if a form present in-page has been already submitted.
+									</li>
+									<li>
+										<code>user</code> has all data about the user behaviour and unique information. You can check if an user is a potential bot, has adblock enabled, if it has already visited the website or what was his first page seen.
 									</li>
 								</ul>
 								<li><code>ctrl</code> contains config data and API responses for logging and debugging. Licence information and last request time to the API.</li>
 								<li><code>func</code> helds the callable functions if any of the data needs to be updated in a specific moment, or need a refresh. All of the available functions are listed on <a href="#datafunc">Data Functions</a> section</li>
 							</ul>
-						</section><!--//docs-intro-->
 
 						<div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="json hljs"><span id="fillObject" class="hljs-string"></span>
 </code></pre>
 						</div><!--//docs-code-block-->
+						</section><!--//docs-intro-->
 						
+						
+							
+					</section><!--//section-->
+			    </article>
+			    
+			    <article class="docs-article" id="install">
+				    <header class="docs-header">
+					    <h1 class="docs-heading">Installation</h1>
+					    <section class="docs-intro">
+						    <p>The installation process is as easy as including a JS script file into your <code>&lt;header&gt;</code> tag, recommending it being the last script to prevent resource-blockage.</p>
+							<div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="json hljs">&lt;header&gt;
+  <span class="hljs-attr">&lt;script src="https://cdn.jsdelivr.net/gh/codebakersdev/mktpacket@master/main.js" key="free-version" gtag=""&gt;&lt;/script&gt;</span>
+&lt;/header&gt;
+</code></pre>
+						</div><!--//docs-code-block-->
+						</section><!--//docs-intro-->
+				    </header>
+				     <section class="docs-section" id="install-script">
+						<h2 class="section-heading">Section Item 2.1</h2>
+						<p>Vivamus efficitur fringilla ullamcorper. Cras condimentum condimentum mauris, vitae facilisis leo. Aliquam sagittis purus nisi, at commodo augue convallis id. Sed interdum turpis quis felis bibendum imperdiet. Mauris pellentesque urna eu leo gravida iaculis. In fringilla odio in felis ultricies porttitor. Donec at purus libero. Vestibulum libero orci, commodo nec arcu sit amet, commodo sollicitudin est. Vestibulum ultricies malesuada tempor.</p>
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-2-2">
+						<h2 class="section-heading">Section Item 2.2</h2>
+						<p>Vivamus efficitur fringilla ullamcorper. Cras condimentum condimentum mauris, vitae facilisis leo. Aliquam sagittis purus nisi, at commodo augue convallis id. Sed interdum turpis quis felis bibendum imperdiet. Mauris pellentesque urna eu leo gravida iaculis. In fringilla odio in felis ultricies porttitor. Donec at purus libero. Vestibulum libero orci, commodo nec arcu sit amet, commodo sollicitudin est. Vestibulum ultricies malesuada tempor.</p>
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-2-3">
+						<h2 class="section-heading">Section Item 2.3</h2>
+						<p>Vivamus efficitur fringilla ullamcorper. Cras condimentum condimentum mauris, vitae facilisis leo. Aliquam sagittis purus nisi, at commodo augue convallis id. Sed interdum turpis quis felis bibendum imperdiet. Mauris pellentesque urna eu leo gravida iaculis. In fringilla odio in felis ultricies porttitor. Donec at purus libero. Vestibulum libero orci, commodo nec arcu sit amet, commodo sollicitudin est. Vestibulum ultricies malesuada tempor.</p>
+					</section><!--//section-->
+			    </article><!--//docs-article-->
+			    
+			    
+			    <article class="docs-article" id="section-3">
+				    <section class="docs-section" id="item-1-1">
+						<h2 class="section-heading">Section Item 1.1</h2>
+
 						<h5>Github Code Example:</h5>
 						<p>You can <a class="theme-link" href="https://gist.github.com/"  target="_blank">embed your code snippets using Github gists</a></p>
 						<div class="docs-code-block">
@@ -164,11 +204,6 @@
 
 </code></pre>
 						</div><!--//docs-code-block-->
-						
-						
-				    </header>
-				    <section class="docs-section" id="item-1-1">
-						<h2 class="section-heading">Section Item 1.1</h2>
 						<p>Vivamus efficitur fringilla ullamcorper. Cras condimentum condimentum mauris, vitae facilisis leo. Aliquam sagittis purus nisi, at commodo augue convallis id. </p>
 						<p>Code Example: <code>npm install &lt;package&gt;</code></p>
 						<h5>Unordered List Examples:</h5>
@@ -463,33 +498,6 @@
 						<p>Vivamus efficitur fringilla ullamcorper. Cras condimentum condimentum mauris, vitae facilisis leo. Aliquam sagittis purus nisi, at commodo augue convallis id. Sed interdum turpis quis felis bibendum imperdiet. Mauris pellentesque urna eu leo gravida iaculis. In fringilla odio in felis ultricies porttitor. Donec at purus libero. Vestibulum libero orci, commodo nec arcu sit amet, commodo sollicitudin est. Vestibulum ultricies malesuada tempor.</p>
 					</section><!--//section-->
 					
-			    </article>
-			    
-			    <article class="docs-article" id="section-2">
-				    <header class="docs-header">
-					    <h1 class="docs-heading">Installation</h1>
-					    <section class="docs-intro">
-						    <p>Section intro goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque finibus condimentum nisl id vulputate. Praesent aliquet varius eros interdum suscipit. Donec eu purus sed nibh convallis bibendum quis vitae turpis. Duis vestibulum diam lorem, vitae dapibus nibh facilisis a. Fusce in malesuada odio.</p>
-						</section><!--//docs-intro-->
-				    </header>
-				     <section class="docs-section" id="item-2-1">
-						<h2 class="section-heading">Section Item 2.1</h2>
-						<p>Vivamus efficitur fringilla ullamcorper. Cras condimentum condimentum mauris, vitae facilisis leo. Aliquam sagittis purus nisi, at commodo augue convallis id. Sed interdum turpis quis felis bibendum imperdiet. Mauris pellentesque urna eu leo gravida iaculis. In fringilla odio in felis ultricies porttitor. Donec at purus libero. Vestibulum libero orci, commodo nec arcu sit amet, commodo sollicitudin est. Vestibulum ultricies malesuada tempor.</p>
-					</section><!--//section-->
-					
-					<section class="docs-section" id="item-2-2">
-						<h2 class="section-heading">Section Item 2.2</h2>
-						<p>Vivamus efficitur fringilla ullamcorper. Cras condimentum condimentum mauris, vitae facilisis leo. Aliquam sagittis purus nisi, at commodo augue convallis id. Sed interdum turpis quis felis bibendum imperdiet. Mauris pellentesque urna eu leo gravida iaculis. In fringilla odio in felis ultricies porttitor. Donec at purus libero. Vestibulum libero orci, commodo nec arcu sit amet, commodo sollicitudin est. Vestibulum ultricies malesuada tempor.</p>
-					</section><!--//section-->
-					
-					<section class="docs-section" id="item-2-3">
-						<h2 class="section-heading">Section Item 2.3</h2>
-						<p>Vivamus efficitur fringilla ullamcorper. Cras condimentum condimentum mauris, vitae facilisis leo. Aliquam sagittis purus nisi, at commodo augue convallis id. Sed interdum turpis quis felis bibendum imperdiet. Mauris pellentesque urna eu leo gravida iaculis. In fringilla odio in felis ultricies porttitor. Donec at purus libero. Vestibulum libero orci, commodo nec arcu sit amet, commodo sollicitudin est. Vestibulum ultricies malesuada tempor.</p>
-					</section><!--//section-->
-			    </article><!--//docs-article-->
-			    
-			    
-			    <article class="docs-article" id="section-3">
 				    <header class="docs-header">
 					    <h1 class="docs-heading">APIs</h1>
 					    <section class="docs-intro">
@@ -706,7 +714,8 @@
     <script src="assets/js/docs.js"></script> 
 
 	
-	<script src="https://cdn.jsdelivr.net/gh/codebakersdev/mktpacket@master/main.js" key="free-version" gtag=""></script>
+	<!--<script src="https://cdn.jsdelivr.net/gh/codebakersdev/mktpacket@master/main.js" key="free-version" gtag=""></script>-->
+    <script src="http://localhost/mktpacket/htdocs/main.js" key="free-version" gtag=""></script>
 	<script>
 	// Poll mktpacket.data every 1 second and display it
 	function displayMktPacketData() {
