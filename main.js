@@ -146,7 +146,51 @@ mktpacket.func = {
       clickData.last_click_timestamp = Math.floor(Date.now() / 1000);
     });
   },
-  
+  getPageScrollDepth: function () {
+    const calculateScrollDepth = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      const scrollHeight = Math.max(
+        document.body.scrollHeight, document.documentElement.scrollHeight
+      );
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+      const maxScrollable = scrollHeight - viewportHeight;
+      const scrollPercent = maxScrollable > 0 ? Math.min((scrollTop / maxScrollable) * 100, 100) : 0;
+
+      if (!mktpacket.data.page) mktpacket.data.page = {};
+      mktpacket.data.page.scroll_depth = {
+        pixels: scrollTop,
+        percent: Math.round(scrollPercent),
+        max_scrollable_range: maxScrollable,
+        total_page_height: scrollHeight
+      };
+    };
+
+    calculateScrollDepth();
+    setTimeout(window.mktpacket.func.getPageScrollDepth, 1000);
+  },
+
+  getPageViewport: function () {
+    const collectViewportData = () => {
+      const viewportWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+      const devicePixelRatio = window.devicePixelRatio || 1;
+
+      // Zoom level estimation: actual pixels / CSS pixels
+      const zoom = screen.width / window.innerWidth;
+
+      if (!mktpacket.data.page) mktpacket.data.page = {};
+      mktpacket.data.page.viewport = {
+        width: viewportWidth,
+        height: viewportHeight,
+        device_pixel_ratio: devicePixelRatio,
+        estimated_zoom: parseFloat(zoom.toFixed(2))
+      };
+    };
+
+    collectViewportData();
+    setTimeout(window.mktpacket.func.getPageViewport, 1000);
+  },
+
   // Client Data
   getClientIsTouchscreen:function() {
     mktpacket.data.client.is_touchscreen = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0) ? true : false;
@@ -253,6 +297,19 @@ mktpacket.func = {
   },
   
   // User Data
+
+  getUserLocalDatetime: function () {
+    const now = new Date();
+
+    if (!mktpacket.data.user) mktpacket.data.user = {};
+    mktpacket.data.user.local_datetime = {
+      iso: now.toISOString(),
+      locale_string: now.toLocaleString(),
+      timezone_offset_minutes: now.getTimezoneOffset() * -1,
+      timestamp: now.getTime()
+    };
+  },
+
   getUserIsBot:function() {
     const is_bot_navigator = !navigator.language || 
                            !navigator.languages || 
@@ -627,6 +684,8 @@ window.addEventListener('load', function(){
     setTimeout(function(){
       mktpacket.func.getPageLoadTime();
       mktpacket.func.getPageStatus();
+      mktpacket.func.getPageScrollDepth();
+      mktpacket.func.getPageViewport();
       mktpacket.func.getABTasty();
       //mktpacket.func.getPageColors();
       mktpacket.func.auxReadyEvent();
