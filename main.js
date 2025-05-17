@@ -169,29 +169,23 @@ mktpacket.func = {
     setTimeout(window.mktpacket.func.getPageScrollDepth, 1000);
   },
 
-  getPageViewport: function () {
-    const collectViewportData = () => {
-      const viewportWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-      const viewportHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-      const devicePixelRatio = window.devicePixelRatio || 1;
+  // Client Data
+  getClientViewport: function () {
+    const viewportWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    const devicePixelRatio = window.devicePixelRatio || 1;
+    const zoom = screen.width / window.innerWidth;
 
-      // Zoom level estimation: actual pixels / CSS pixels
-      const zoom = screen.width / window.innerWidth;
-
-      if (!mktpacket.data.page) mktpacket.data.page = {};
-      mktpacket.data.page.viewport = {
-        width: viewportWidth,
-        height: viewportHeight,
-        device_pixel_ratio: devicePixelRatio,
-        estimated_zoom: parseFloat(zoom.toFixed(2))
-      };
+    mktpacket.data.client.viewport = {
+      width: viewportWidth,
+      height: viewportHeight,
+      device_pixel_ratio: devicePixelRatio,
+      estimated_zoom: parseFloat(zoom.toFixed(2))
     };
 
-    collectViewportData();
-    setTimeout(window.mktpacket.func.getPageViewport, 1000);
+    setTimeout(window.mktpacket.func.getClientViewport, 1000);
   },
 
-  // Client Data
   getClientIsTouchscreen:function() {
     mktpacket.data.client.is_touchscreen = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0) ? true : false;
   },
@@ -297,7 +291,6 @@ mktpacket.func = {
   },
   
   // User Data
-
   getUserLocalDatetime: function () {
     const now = new Date();
 
@@ -489,7 +482,6 @@ mktpacket.func = {
       localStorage.setItem('mktpacket_form_data', JSON.stringify(mktpacket.data.page.form));
     }
 
-    // 1. Native submit event
     document.addEventListener('submit', function(event) {
       const form = event.target;
       if (form.tagName.toLowerCase() === 'form') {
@@ -497,7 +489,6 @@ mktpacket.func = {
       }
     }, true);
 
-    // 2. Intercept clicks on submit buttons (for AJAX forms)
     document.addEventListener('click', function(event) {
       const btn = event.target.closest('button[type="submit"], input[type="submit"]');
       if (!btn) return;
@@ -509,7 +500,6 @@ mktpacket.func = {
       }
     }, true);
 
-    // 3. Optional: Intercept fetch() for deep AJAX tracking
     if (window.fetch) {
       const origFetch = window.fetch;
       window.fetch = function(...args) {
@@ -643,6 +633,7 @@ mktpacket.func = {
     this.getPageClickCount();
     this.getPageMetadata();
 
+    this.getClientViewport();
     this.getClientNetwork();
     this.getClientPlatform();
     this.getClientTimezone();
@@ -685,7 +676,6 @@ window.addEventListener('load', function(){
       mktpacket.func.getPageLoadTime();
       mktpacket.func.getPageStatus();
       mktpacket.func.getPageScrollDepth();
-      mktpacket.func.getPageViewport();
       mktpacket.func.getABTasty();
       //mktpacket.func.getPageColors();
       mktpacket.func.auxReadyEvent();
