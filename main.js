@@ -169,6 +169,69 @@ mktpacket.func = {
     setTimeout(window.mktpacket.func.getPageScrollDepth, 1000);
   },
 
+  getPageCoreWebVitals: function () {
+    if (!mktpacket.data.page.core_web_vitals) mktpacket.data.page.core_web_vitals = {};
+
+    const toFixed2 = (num) => Number(num.toFixed(2));
+
+    // Largest Contentful Paint (LCP)
+    new PerformanceObserver((entryList) => {
+      const entries = entryList.getEntries();
+      const lastEntry = entries[entries.length - 1];
+      if (lastEntry) {
+        const lcp = lastEntry.renderTime || lastEntry.loadTime;
+        mktpacket.data.page.core_web_vitals.lcp = toFixed2(lcp);
+      }
+    }).observe({ type: 'largest-contentful-paint', buffered: true });
+
+    // First Input Delay (FID)
+    new PerformanceObserver((entryList) => {
+      const entry = entryList.getEntries()[0];
+      if (entry) {
+        const fid = entry.processingStart - entry.startTime;
+        mktpacket.data.page.core_web_vitals.fid = toFixed2(fid);
+      }
+    }).observe({ type: 'first-input', buffered: true });
+
+    // Cumulative Layout Shift (CLS)
+    let clsValue = 0;
+    new PerformanceObserver((entryList) => {
+      for (const entry of entryList.getEntries()) {
+        if (!entry.hadRecentInput) {
+          clsValue += entry.value;
+        }
+      }
+      mktpacket.data.page.core_web_vitals.cls = toFixed2(clsValue);
+    }).observe({ type: 'layout-shift', buffered: true });
+
+    // Time to First Byte (TTFB)
+    const navEntry = performance.getEntriesByType('navigation')[0];
+    if (navEntry) {
+      const ttfb = navEntry.responseStart - navEntry.startTime;
+      mktpacket.data.page.core_web_vitals.ttfb = toFixed2(ttfb);
+    } else if (performance.timing) {
+      const t = performance.timing;
+      const ttfb = t.responseStart - t.requestStart;
+      mktpacket.data.page.core_web_vitals.ttfb = toFixed2(ttfb);
+    }
+
+    // Interaction to Next Paint (INP — Approximate via long event tasks)
+    let totalInteractionDelay = 0;
+    let interactionCount = 0;
+    new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) {
+        if (entry.duration > 40) {
+          totalInteractionDelay += entry.duration;
+          interactionCount++;
+        }
+      }
+      if (interactionCount > 0) {
+        const inp = totalInteractionDelay / interactionCount;
+        mktpacket.data.page.core_web_vitals.inp = toFixed2(inp);
+      }
+    }).observe({ type: 'event', buffered: true, durationThreshold: 40 });
+  },
+
   // Client Data
   getClientViewport: function () {
     const viewportWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
@@ -293,14 +356,13 @@ mktpacket.func = {
   // User Data
   getUserLocalDatetime: function () {
     const now = new Date();
-
-    if (!mktpacket.data.user) mktpacket.data.user = {};
     mktpacket.data.user.local_datetime = {
       iso: now.toISOString(),
       locale_string: now.toLocaleString(),
       timezone_offset_minutes: now.getTimezoneOffset() * -1,
-      timestamp: now.getTime()
+      timestamp: Math.floor(now.getTime() / 1000)
     };
+    setTimeout(window.mktpacket.func.getUserLocalDatetime, 1000);
   },
 
   getUserIsBot:function() {
@@ -603,9 +665,9 @@ mktpacket.func = {
   },
   
   // API Updaters
-  getUserIP: function() {
+  getUserHashedIP: function() {
     mktpacket.func.auxAPIConnect(function () {
-      mktpacket.data.user.ip = mktpacket.ctrl.api_response;
+      mktpacket.data.user.hashed_ip = mktpacket.ctrl.api_response;
     }, 'getUserIP');
   },
   getUserISP: function() {
@@ -644,6 +706,7 @@ mktpacket.func = {
     this.getClientScreenOrientation();
     this.getClientBatteryStatus();
     
+    this.getUserLocalDatetime();
     this.getUserIsBot();
     this.getUserHasAdblock();
     this.getUserFirstPage('local');
@@ -676,6 +739,7 @@ window.addEventListener('load', function(){
       mktpacket.func.getPageLoadTime();
       mktpacket.func.getPageStatus();
       mktpacket.func.getPageScrollDepth();
+      mktpacket.func.getPageCoreWebVitals();
       mktpacket.func.getABTasty();
       //mktpacket.func.getPageColors();
       mktpacket.func.auxReadyEvent();
