@@ -12620,5 +12620,13 @@ a.text-link:hover {
     padding-top: 0.5rem;
   }
 }
+code.json.hljs, code.javascript.hljs {
+  font-size: 0.9rem;
+}
+
+.docs-article h4, .docs-article .h4 {
+  font-size: 1.15rem;
+  color: rgb(70.3, 77.9, 91.2);
+}
 
 /*# sourceMappingURL=theme.css.map */

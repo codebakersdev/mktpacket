@@ -51,7 +51,7 @@
 	           			<li class="list-inline-item"><a href="https://www.instagram.com/codebakers_dev/" target="_blank"><i class="fa-brands fa-instagram fa-fw"></i></a></li>
 						<li class="list-inline-item"><a href="https://github.com/codebakersdev/mktpacket" target="_blank"><i class="fa-brands fa-github fa-fw"></i></a></li>
 		            </ul><!--//social-list-->
-		            <a href="http://localhost/mktpacket/htdocs/docs/docs-page.html#section-2" class="btn btn-primary d-none d-lg-flex me-1">Free Download</a> 
+		            <a href="http://localhost/mktpacket/htdocs/docs/docs-page.html#install" class="btn btn-primary d-none d-lg-flex me-1">Free Download</a> 
 		            <a href="#" class="btn btn-warning d-none d-md-flex text-decoration-line-through">Get PRO</a>
 	            </div><!--//docs-top-utilities-->
             </div><!--//container-->
@@ -87,7 +87,8 @@
 				    <li class="nav-item"><a class="nav-link scrollto" href="#datafuncaux">Auxiliar Functions</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#exampleusage">Example Usage</a></li>
 				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#faqs"><span class="theme-icon-holder me-2"><i class="fas fa-lightbulb"></i></span>FAQs</a></li>
-				    <li class="nav-item"><a class="nav-link scrollto" href="#faq-1">FAQ section 1</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#faq-mktpacket">Data Storage</a></li>
+            <li class="nav-item"><a class="nav-link scrollto" href="#faq-1">FAQ section 1</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#faq-2">FAQ section 2</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#faq-3">FAQ section 3</a></li>
 			    </ul>
@@ -98,7 +99,7 @@
 		    <div class="container">
 			    <article class="docs-article" id="intro">
 				    <header id="intro-overview" class="docs-header">
-					    <h1 class="docs-heading">Introduction <span class="docs-time">Last updated: May 23 - 2025</span></h1>
+					    <h1 class="docs-heading">Introduction <span class="docs-time">Last updated: May 24 - 2025</span></h1>
 					    <section class="docs-intro">
 						    <h4>Overview</h4>
 							<p>This web helper library is designed to streamline the collection of key user, client, and page-level data for marketing and analytics purposes. 
@@ -127,13 +128,16 @@
 									<li>
 										<code>user</code> has all data about the user behaviour and unique information. You can check if an user is a potential bot, has adblock enabled, if it has already visited the website or what was his first page seen.
 									</li>
+                  <li>
+										Integration modules like <code>ga</code>, <code>abtasty</code>, <code>onetrust</code> when the corresponding 3rd-party code is present.
+									</li>
 								</ul>
 								<li><code>ctrl</code> contains config data and API responses for logging and debugging. Licence information and last request time to the API.</li>
 								<li><code>func</code> helds the callable functions if any of the data needs to be updated in a specific moment, or need a refresh. All of the available functions are listed on <a href="#datafunc">Data Functions</a> section</li>
 							</ul>
 
 						<div class="docs-code-block">
-							<pre class="shadow-lg rounded" style="min-height:2584px"><code class="json hljs" style="min-height: inherit;"><span id="fillObject" class=""></span>
+							<pre class="shadow-lg rounded" style="min-height:2332px"><code class="json hljs" style="min-height: inherit;"><span id="fillObject" class=""></span>
 </code></pre>
 						</div><!--//docs-code-block-->
 						</section><!--//docs-intro-->
@@ -204,7 +208,7 @@
 						<p>This functions are related to device, browser, operating system, network, etc. of the accessing person. It uses mostly data from <code>document</code>, <code>window</code> and <code>navigator</code>.</p>
 </section>
  						<section class="docs-section" id="datafuncgetclientistouchscreen">
-							<h4 class="callout-title">mktpacket.func.getClientIsTouchscreen()</h4>
+							<h4 class="callout-title">mktpacket.func<wbr>.getClientIsTouchscreen<wbr>()</h4>
 							<p>A function that outputs <code>true</code> or <code>false</code> depending if the screen has touch support.</p>
 							<p>Data persists: No</p>
 							<p>Output: <code>boolean</code></p>
@@ -218,7 +222,7 @@
 
 						</section>
 <section class="docs-section" id="datafuncgetclientismobile">
-  <h4 class="callout-title">mktpacket.func.getClientIsMobile()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getClientIsMobile<wbr>()</h4>
   <p>A function that detects if the client device is a mobile device by using <code>navigator.userAgentData</code> when available, or by matching known mobile user-agent strings.</p>
   <p>Data persists: No</p>
   <p>Output: <code>boolean</code></p>
@@ -237,7 +241,7 @@
 </section>
 
 <section class="docs-section" id="datafuncgetclientscreenorientation">
-  <h4 class="callout-title">mktpacket.func.getClientScreenOrientation()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getClientScreenOrientation<wbr>()</h4>
   <p>A function that detects the screen's current orientation using <code>screen.orientation.type</code> and updates it every second.</p>
   <p>Data persists: No</p>
   <p>Output: <code>string</code> (e.g., <code>portrait-primary</code>, <code>landscape-primary</code>)</p>
@@ -251,7 +255,7 @@
   </div><!--//docs-code-block-->
 </section>
 <section class="docs-section" id="datafuncgetclientplatform">
-  <h4 class="callout-title">mktpacket.func.getClientPlatform()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getClientPlatform<wbr>()</h4>
   <p>A function that detects the client's platform (operating system or device) by matching patterns in the <code>navigator.userAgent</code> string.</p>
   <p>Data persists: No</p>
   <p>Output: <code>string</code> (e.g., <code>android</code>, <code>iphone</code>, <code>windows</code>, <code>linux</code>, <code>zebra</code>)</p>
@@ -288,7 +292,7 @@
 </section>
 
 <section class="docs-section" id="datafuncgetclientbrowsername">
-  <h4 class="callout-title">mktpacket.func.getClientBrowserName()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getClientBrowserName<wbr>()</h4>
   <p>A function that detects the client's browser name by checking for known identifiers within the <code>navigator.userAgent</code> string.</p>
   <p>Data persists: No</p>
   <p>Output: <code>string</code> (e.g., <code>chrome</code>, <code>firefox</code>, <code>safari</code>, <code>edge</code>, <code>opera</code>, <code>vivaldi</code>)</p>
@@ -318,7 +322,7 @@
 </section>
 
 <section class="docs-section" id="datafuncgetclientbrowserlanguage">
-  <h4 class="callout-title">mktpacket.func.getClientBrowserLanguage()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getClientBrowserLanguage<wbr>()</h4>
   <p>A function that retrieves the client's browser language setting using <code>navigator.language</code>.</p>
   <p>Data persists: No</p>
   <p>Output: <code>string</code> (e.g., <code>en-US</code>, <code>fr-FR</code>, <code>es-ES</code>)</p>
@@ -332,7 +336,7 @@
 </section>
 
 <section class="docs-section" id="datafuncgetclienttimezone">
-  <h4 class="callout-title">mktpacket.func.getClientTimezone()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getClientTimezone<wbr>()</h4>
   <p>A function that retrieves the client's IANA time zone identifier using <code>Intl.DateTimeFormat().resolvedOptions().timeZone</code>.</p>
   <p>Data persists: No</p>
   <p>Output: <code>string</code> (e.g., <code>America/New_York</code>, <code>Europe/Berlin</code>, <code>Asia/Tokyo</code>)</p>
@@ -346,7 +350,7 @@
 </section>
 
 <section class="docs-section" id="datafuncgetclientbatterystatus">
-  <h4 class="callout-title">mktpacket.func.getClientBatteryStatus()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getClientBatteryStatus<wbr>()</h4>
   <p>A function that retrieves the client's battery status using the <code>navigator.getBattery()</code> API. If supported, it captures charging state, battery level, and estimated charging/discharging times. The function re-runs every second to keep the data updated.</p>
   <p>Data persists: No</p>
   <p>Output: <code>object</code> or <code>string</code> (<code>"no_information"</code> if unsupported)</p>
@@ -375,7 +379,7 @@
 						<p>This functions are related to page information, like status, load time, URL parts and SEO driven data.</p>
 					</section>
 						<section class="docs-section" id="datafuncgetpagestatus">
-  <h4 class="callout-title">mktpacket.func.getPageStatus()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getPageStatus<wbr>()</h4>
   <p>A function that retrieves the HTTP response status code of the current page using the Navigation Timing API. If unsupported, returns <code>"unsupported"</code>.</p>
   <p>Data persists: No</p>
   <p>Output: <code>number</code> or <code>string</code> (<code>"unsupported"</code>)</p>
@@ -389,7 +393,7 @@
 </section>
 
 <section class="docs-section" id="datafuncgetpageloadtime">
-  <h4 class="callout-title">mktpacket.func.getPageLoadTime()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getPageLoadTime<wbr>()</h4>
   <p>A function that retrieves the total load time of the current page in milliseconds using the Navigation Timing API. Returns <code>"unsupported"</code> if unavailable.</p>
   <p>Data persists: No</p>
   <p>Output: <code>number</code> (in ms) or <code>string</code> (<code>"unsupported"</code>)</p>
@@ -403,7 +407,7 @@
 </section>
 
 <section class="docs-section" id="datafuncgetpageurl">
-  <h4 class="callout-title">mktpacket.func.getPageUrl()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getPageUrl<wbr>()</h4>
   <p>A function that captures the full URL of the current page using <code>window.location.href</code>.</p>
   <p>Data persists: No</p>
   <p>Output: <code>string</code> (e.g., <code>https://example.com/path</code>)</p>
@@ -416,7 +420,7 @@
   </div><!--//docs-code-block-->
 </section>
 <section class="docs-section" id="datafuncgetpageanchor">
-  <h4 class="callout-title">mktpacket.func.getPageAnchor()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getPageAnchor<wbr>()</h4>
   <p>A function that captures the anchor (fragment identifier) portion of the current URL (i.e., anything after <code>#</code>), if present.</p>
   <p>Data persists: No</p>
   <p>Output: <code>string</code> (e.g., <code>section1</code>)</p>
@@ -431,7 +435,7 @@
 </section>
 
 <section class="docs-section" id="datafuncgetpagetitle">
-  <h4 class="callout-title">mktpacket.func.getPageTitle()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getPageTitle<wbr>()</h4>
   <p>A function that retrieves the page's document title using <code>document.title</code>.</p>
   <p>Data persists: No</p>
   <p>Output: <code>string</code> (e.g., <code>Welcome to My Site</code>)</p>
@@ -444,7 +448,7 @@
   </div><!--//docs-code-block-->
 </section>
 <section class="docs-section" id="datafuncgetpagelanguage">
-  <h4 class="callout-title">mktpacket.func.getPageLanguage()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getPageLanguage<wbr>()</h4>
   <p>A function that retrieves the language of the current page from the <code>&lt;html lang&gt;</code> attribute.</p>
   <p>Data persists: No</p>
   <p>Output: <code>string</code> (e.g., <code>en</code>, <code>fr</code>, <code>es</code>)</p>
@@ -458,7 +462,7 @@
 </section>
 
 <section class="docs-section" id="datafuncgetpagemetadata">
-  <h4 class="callout-title">mktpacket.func.getPageMetadata()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getPageMetadata<wbr>()</h4>
   <p>A function that collects all metadata from <code>&lt;meta&gt;</code> tags with <code>name</code> or <code>property</code> attributes, storing them as key-value pairs in an object.</p>
   <p>Data persists: No</p>
   <p>Output: <code>object</code> (e.g., <code>{ description: "...", og:title: "..." }</code>)</p>
@@ -482,7 +486,7 @@
   </div><!--//docs-code-block-->
 </section>
 <section class="docs-section" id="datafuncgetpagereferrer">
-  <h4 class="callout-title">mktpacket.func.getPageReferrer(<code>storageType</code>)</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getPageReferrer<wbr>(<code>storageType</code>)</h4>
   <p>A function that checks the referring URL and stores it in either <code>localStorage</code> or <code>sessionStorage</code> depending on the provided <code>storageType</code> ("local" or "session"). Only external referrers (different hostname) are recorded. Data is stored under a key like <code>mktpacket_referrer_session</code>.</p>
   <p>Data persists: Optional (<code>mktpacket.ctrl.persist</code> must include the relevant key)</p>
   <p>Output: <code>string</code> (e.g., <code>https://external.com</code> or <code>no_referrer</code>)</p>
@@ -507,7 +511,7 @@
   </div><!--//docs-code-block-->
 </section>
 <section class="docs-section" id="datafuncgetpageparameters">
-  <h4 class="callout-title">mktpacket.func.getPageParameters()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getPageParameters<wbr>()</h4>
   <p>A function that extracts all query parameters from the page URL and stores them as key-value pairs.</p>
   <p>Data persists: No</p>
   <p>Output: <code>object</code> (e.g., <code>{ utm_source: "google", campaign: "spring" }</code>)</p>
@@ -528,8 +532,128 @@
 </code></pre>
   </div><!--//docs-code-block-->
 </section>
+<section class="docs-section" id="datafuncgetpageheaviestresource">
+  <h4 class="callout-title">mktpacket.func<wbr>.getPageHeaviestResource<wbr>()</h4>
+  <p>Identifies the single largest *uncached* resource (by transfer size) loaded on the current page using the Performance API, and stores its details in <code>mktpacket.data.page.heaviest_resource</code>.</p>
+  <p>Data persists: No</p>
+  <p>Output: <code>void</code></p>
+  <p><strong>Stored Fields:</strong></p>
+  <ul>
+    <li><code>name</code> – URL of the heaviest uncached resource, or <code>'resources_cached'</code> if all were cached</li>
+    <li><code>size_bytes</code> – Transfer size in bytes</li>
+    <li><code>load_time_ms</code> – Load duration in milliseconds (float, 2 decimal precision)</li>
+  </ul>
+  <p><strong>Fallback Behavior:</strong> 
+    <ul>
+      <li>If <code>performance.getEntriesByType('resource')</code> returns an empty array, <code>name</code> is set to <code>null</code>.</li>
+      <li>If all resources have a <code>transferSize</code> of <code>0</code> (i.e. fully cached), <code>name</code> is set to <code>'resources_cached'</code>.</li>
+    </ul>
+  </p>
+  <div class="docs-code-block">
+    <pre class="shadow-lg rounded"><code class="javascript hljs"><span class="hljs-title">getPageHeaviestResource</span>: function () {
+  const resources = performance.getEntriesByType('resource');
+  const uncached = resources.filter(res => res.transferSize > 0);
+
+  if (uncached.length === 0) {
+    mktpacket.data.page.heaviest_resource = {
+      name: resources.length === 0 ? null : 'resources_cached',
+      size_bytes: 0,
+      load_time_ms: 0
+    };
+    return;
+  }
+
+  const heaviest = uncached.reduce((max, res) =>
+    res.transferSize > max.transferSize ? res : max
+  );
+
+  mktpacket.data.page.heaviest_resource = {
+    name: heaviest.name,
+    size_bytes: heaviest.transferSize,
+    load_time_ms: parseFloat(heaviest.duration.toFixed(2))
+  };
+}
+</code></pre>
+  </div>
+</section>
+
+<section class="docs-section" id="datafuncgetpagecorewebvitals">
+  <h4 class="callout-title">mktpacket.func<wbr>.getPageCoreWebVitals<wbr>()</h4>
+  <p>Captures Core Web Vitals metrics using the PerformanceObserver API and stores them in <code>mktpacket.data.page.core_web_vitals</code>. Metrics collected include:</p>
+  <ul>
+    <li><strong>LCP (Largest Contentful Paint)</strong> – Time to render the largest visible content element</li>
+    <li><strong>FID (First Input Delay)</strong> – Time between user interaction and browser response</li>
+    <li><strong>CLS (Cumulative Layout Shift)</strong> – Total shift score of visible elements</li>
+    <li><strong>TTFB (Time to First Byte)</strong> – Server response latency</li>
+    <li><strong>INP (Interaction to Next Paint)</strong> – Estimated from long interaction events (duration &gt; 40ms)</li>
+  </ul>
+  <p>Data persists: No</p>
+  <p>Output: <code>void</code></p>
+  <p>Each metric is stored with a precision of 2 decimal places.</p>
+  <div class="docs-code-block">
+    <pre class="shadow-lg rounded"><code class="javascript hljs"><span class="hljs-title">getPageCoreWebVitals</span>: function () {
+  if (!mktpacket.data.page.core_web_vitals) mktpacket.data.page.core_web_vitals = {};
+
+  const toFixed2 = (num) => Number(num.toFixed(2));
+
+  new PerformanceObserver((entryList) => {
+    const entries = entryList.getEntries();
+    const lastEntry = entries[entries.length - 1];
+    if (lastEntry) {
+      const lcp = lastEntry.renderTime || lastEntry.loadTime;
+      mktpacket.data.page.core_web_vitals.lcp = toFixed2(lcp);
+    }
+  }).observe({ type: 'largest-contentful-paint', buffered: true });
+
+  new PerformanceObserver((entryList) => {
+    const entry = entryList.getEntries()[0];
+    if (entry) {
+      const fid = entry.processingStart - entry.startTime;
+      mktpacket.data.page.core_web_vitals.fid = toFixed2(fid);
+    }
+  }).observe({ type: 'first-input', buffered: true });
+
+  let clsValue = 0;
+  new PerformanceObserver((entryList) => {
+    for (const entry of entryList.getEntries()) {
+      if (!entry.hadRecentInput) {
+        clsValue += entry.value;
+      }
+    }
+    mktpacket.data.page.core_web_vitals.cls = toFixed2(clsValue);
+  }).observe({ type: 'layout-shift', buffered: true });
+
+  const navEntry = performance.getEntriesByType('navigation')[0];
+  if (navEntry) {
+    const ttfb = navEntry.responseStart - navEntry.startTime;
+    mktpacket.data.page.core_web_vitals.ttfb = toFixed2(ttfb);
+  } else if (performance.timing) {
+    const t = performance.timing;
+    const ttfb = t.responseStart - t.requestStart;
+    mktpacket.data.page.core_web_vitals.ttfb = toFixed2(ttfb);
+  }
+
+  let totalInteractionDelay = 0;
+  let interactionCount = 0;
+  new PerformanceObserver((list) => {
+    for (const entry of list.getEntries()) {
+      if (entry.duration > 40) {
+        totalInteractionDelay += entry.duration;
+        interactionCount++;
+      }
+    }
+    if (interactionCount > 0) {
+      const inp = totalInteractionDelay / interactionCount;
+      mktpacket.data.page.core_web_vitals.inp = toFixed2(inp);
+    }
+  }).observe({ type: 'event', buffered: true, durationThreshold: 40 });
+}
+</code></pre>
+  </div>
+</section>
+
 <section class="docs-section" id="datafuncgetpagecolors">
-  <h4 class="callout-title">mktpacket.func.getPageColors()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getPageColors<wbr>()</h4>
    <div class="callout-block callout-block-info">
                             <div class="content">
                                 <h4 class="callout-title">
@@ -580,7 +704,7 @@
 </section>
 
 					<section class="docs-section" id="datafuncgetpageclickcount">
-  <h4 class="callout-title">mktpacket.func.getPageClickCount()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getPageClickCount<wbr>()</h4>
   <p>A function that tracks all click events on the page and logs them in a structured object keyed by a generated element descriptor. It captures click counts and the last click timestamp (in seconds) for each unique element.</p>
   <p>Data persists: No</p>
   <p>Output: <code>object</code> (e.g., <code>{ "button#submit": { count: 3, last_click_timestamp: 1715700000 } }</code>)</p>
@@ -623,7 +747,7 @@
 						<p>This functions are related to user information, like it has adBlock enabled, it's a potential bot, already visited a page, or how much time has spent on page.</p>
 					</section>
 					<section class="docs-section" id="datafuncgetuserlocaldatetime">
-  <h4 class="callout-title">mktpacket.func.getUserLocalDatetime()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getUserLocalDatetime<wbr>()</h4>
   <p>A function that captures the user's local date and time information, including ISO format, locale string, timezone offset, and timestamp.</p>
   <p>Data persists: No</p>
   <p>Output: <code>object</code> with the following properties:</p>
@@ -651,7 +775,7 @@
 </section>
 
 					<section class="docs-section" id="datafuncgetuserisbot">
-  <h4 class="callout-title">mktpacket.func.getUserIsBot()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getUserIsBot<wbr>()</h4>
   <p>A function that detects whether the client appears to be a bot based on several navigator properties and the user agent string. It checks for missing navigator fields, automation indicators (like <code>navigator.webdriver</code>), and known bot keywords in the user agent.</p>
   <p>Data persists: No</p>
   <p>Output: <code>boolean</code></p>
@@ -676,7 +800,7 @@
 </section>
 
 <section class="docs-section" id="datafuncgetuserfirstpage">
-  <h4 class="callout-title">mktpacket.func.getUserFirstPage(<code>storageType</code>)</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getUserFirstPage<wbr>(<code>storageType</code>)</h4>
   <p>A function that captures and stores the first page visited by the user during the session or across sessions, based on the specified storage type (<code>'session'</code> or <code>'local'</code>).</p>
   <p>Data persists: Yes</p>
   <p>Output: <code>string</code> – The URL of the user's first visited page</p>
@@ -702,7 +826,7 @@
   </div><!--//docs-code-block-->
 </section>
 <section class="docs-section" id="datafuncgetusertimeonpage">
-  <h4 class="callout-title">mktpacket.func.getUserTimeOnPage()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getUserTimeOnPage<wbr>()</h4>
   <p>A function that tracks how long the user has spent on the current page. The timer starts when the function is called and updates every second.</p>
   <p>Data persists: No (resets on page reload)</p>
   <p>Output: <code>number</code> – Time on page in seconds</p>
@@ -725,7 +849,7 @@
   </div><!--//docs-code-block-->
 </section>
 <section class="docs-section" id="datafuncgetusertimeonwebsite">
-  <h4 class="callout-title">mktpacket.func.getUserTimeOnWebsite()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getUserTimeOnWebsite<wbr>()</h4>
   <p>A function that tracks the total time a user has spent on the website during the current session. It accumulates time across page views and stores it in <code>sessionStorage</code>.</p>
   <p>Data persists: Yes (within the same session)</p>
   <p>Output: <code>number</code> – Total time on website in seconds</p>
@@ -757,7 +881,7 @@
 </section>
 
 <section class="docs-section" id="datafuncgetuserisreturning">
-  <h4 class="callout-title">mktpacket.func.getUserIsReturning()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getUserIsReturning<wbr>()</h4>
   <p>A function that detects if the user has visited the website before using <code>localStorage</code>. Sets a flag on the first visit for future reference.</p>
   <p>Data persists: Yes (across sessions, using <code>localStorage</code>)</p>
   <p>Output: <code>boolean</code> – <code>true</code> if user is returning, <code>false</code> otherwise</p>
@@ -774,7 +898,7 @@
   </div><!--//docs-code-block-->
 </section>
 <section class="docs-section" id="datafuncgetuserhashedip">
-  <h4 class="callout-title">mktpacket.func.getUserHashedIP()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getUserHashedIP<wbr>()</h4>
                         <div class="callout-block callout-block-warning">
                             <div class="content">
                                 <h4 class="callout-title">
@@ -804,7 +928,7 @@
   </div>
 </section>
 <section class="docs-section" id="datafuncgetuserisp">
-  <h4 class="callout-title">mktpacket.func.getUserISP()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getUserISP<wbr>()</h4>
                           <div class="callout-block callout-block-warning">
                             <div class="content">
                                 <h4 class="callout-title">
@@ -834,7 +958,7 @@
   </div>
 </section>
 <section class="docs-section" id="datafuncgetuseruniqueid">
-  <h4 class="callout-title">mktpacket.func.getUserUniqueID()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getUserUniqueID<wbr>()</h4>
                           <div class="callout-block callout-block-warning">
                             <div class="content">
                                 <h4 class="callout-title">
@@ -880,7 +1004,7 @@
 						<h2 class="section-heading">Marketing related functions</h2>
 </section>
  						<section class="docs-section" id="datafuncgetadclick">
-  <h4 class="callout-title">mktpacket.func.getAdClick()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getAdClick<wbr>()</h4>
   <p>A function that detects known advertising click identifiers in the URL parameters and records the ad click source and value.</p>
   <p>Data persists: No</p>
   <p>Output: <code>object</code> – Contains the detected ad parameter and its value:</p>
@@ -910,7 +1034,7 @@
 </section>
 
 <section class="docs-section" id="datafuncgetgaclientid">
-  <h4 class="callout-title">mktpacket.func.getGAClientId()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getGAClientId<wbr>()</h4>
   <p>A function that retrieves the Google Analytics Client ID using the <code>gtag</code> API. This ID is used to uniquely identify a user in GA.</p>
   <p>Data persists: No</p>
   <p>Output: <code>string</code> – GA Client ID (if available)</p>
@@ -930,7 +1054,7 @@
   </div><!--//docs-code-block-->
 </section>
 <section class="docs-section" id="datafuncgetgasessionid">
-  <h4 class="callout-title">mktpacket.func.getGASessionId()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getGASessionId<wbr>()</h4>
   <p>A function that retrieves the current Google Analytics Session ID using the <code>gtag</code> API. This helps track user sessions more precisely.</p>
   <p>Data persists: No</p>
   <p>Output: <code>string</code> – GA Session ID (if available)</p>
@@ -953,7 +1077,7 @@
 						<h2 class="section-heading">ABTasty related functions</h2>
 </section>
 <section class="docs-section" id="datafuncgetabtasty">
-  <h4 class="callout-title">mktpacket.func.getABTasty()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getABTasty<wbr>()</h4>
   <p>A function that extracts active A/B test data from the <code>ABTasty</code> global object (if available). Captures campaign and variation information for analysis.</p>
   <p>Data persists: No</p>
   <p>Output: <code>object</code> – Details of the A/B test on the current page:</p>
@@ -999,7 +1123,7 @@
 </section>
 
 <section class="docs-section" id="datafuncgetonetrust">
-  <h4 class="callout-title">mktpacket.func.getOneTrust()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.getOneTrust<wbr>()</h4>
   <p>A function that captures user consent data from the <code>OneTrust</code> CMP (Consent Management Platform). It records Google consent status and active consent groups if available.</p>
   <p>Data persists: No</p>
   <p>Output: <code>object</code> – Contains consent-related data:</p>
@@ -1038,7 +1162,7 @@
 						<h2 class="section-heading">Auxiliar functions</h2>
 </section>
 <section class="docs-section" id="datafuncauxtrackformsubmissions">
-  <h4 class="callout-title">mktpacket.func.auxTrackFormSubmissions()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.auxTrackFormSubmissions<wbr>()</h4>
   <p>A utility function that listens for form submissions across the site and stores related data in <code>localStorage</code>. This allows detection of whether a user has previously submitted a form, along with basic metadata about the submission.</p>
   <p>Data persists: Yes (via <code>localStorage</code> key <code>mktpacket_form_data</code>)</p>
   <p>Output: <code>object</code> – Form metadata:</p>
@@ -1108,7 +1232,7 @@
   </div><!--//docs-code-block-->
 </section>
 <section class="docs-section" id="datafuncauxgtagobserver">
-  <h4 class="callout-title">mktpacket.func.auxGTagObserver(callback)</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.auxGTagObserver<wbr>(callback)</h4>
   <p>A utility function that waits for the <code>gtag</code> function to become available. If <code>gtag</code> is already defined, the callback is executed immediately. Otherwise, a <code>MutationObserver</code> monitors the DOM for changes that indicate <code>gtag</code> has loaded, triggering the callback once available.</p>
   <p>Data persists: No</p>
   <p>Output: <code>void</code> – Executes the provided <code>callback</code> once <code>gtag</code> is detected</p>
@@ -1147,7 +1271,7 @@
   </div><!--//docs-code-block-->
 </section>
 <section class="docs-section" id="datafuncauxpageurlobserver">
-  <h4 class="callout-title">mktpacket.func.auxPageURLObserver(callback)</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.auxPageURLObserver<wbr>(callback)</h4>
   <p>A utility function that listens for changes to the page URL via the History API (<code>popstate</code>) and hash changes (<code>hashchange</code>). The callback is invoked immediately with the current URL, and again whenever the URL changes.</p>
   <p>Data persists: No</p>
   <p>Output: <code>function</code> – A function that can be called to remove the event listeners</p>
@@ -1179,7 +1303,7 @@
   </div><!--//docs-code-block-->
 </section>
 <section class="docs-section" id="datafuncauxapiconnect">
-  <h4 class="callout-title">mktpacket.func.auxAPIConnect(callback, func_name = 'getAllData')</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.auxAPIConnect<wbr>(callback, func_name = 'getAllData')</h4>
   <p>Connects to the <code>mktpacket</code> backend API using a stored API key, fetches data, and merges it into the <code>mktpacket</code> object. Supports optional callback execution after successful response.</p>
   <p>Data persists: Conditional (based on <code>mktpacket.ctrl.persist</code>)</p>
   <p>Output: <code>void</code></p>
@@ -1222,7 +1346,7 @@
   </div>
 </section>
 <section class="docs-section" id="datafuncauxobjectmerge">
-  <h4 class="callout-title">mktpacket.func.auxObjectMerge(target, source, usePersistedValues = true)</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.auxObjectMerge<wbr>(target, source, usePersistedValues = true)</h4>
   <p>Recursively merges properties from a source object into a target object. For keys listed in <code>mktpacket.ctrl.persist</code>, values are stored in and optionally retrieved from <code>localStorage</code>.</p>
   <p>Data persists: Yes (conditionally based on <code>persist</code> config)</p>
   <p>Output: <code>object</code> – The merged target object</p>
@@ -1264,7 +1388,7 @@
   </div>
 </section>
 <section class="docs-section" id="datafuncauxreadyevent">
-  <h4 class="callout-title">mktpacket.func.auxReadyEvent()</h4>
+  <h4 class="callout-title">mktpacket.func<wbr>.auxReadyEvent<wbr>()</h4>
   <p>Dispatches a custom <code>dataLayer</code> event called <code>mktpacket_ready</code>, indicating that <code>mktpacket</code> has completed initialization. Also includes the license key from <code>mktpacket.ctrl.license</code>.</p>
   <p>Data persists: No</p>
   <p>Output: <code>void</code></p>
@@ -1296,46 +1420,47 @@
 
 			    
 			    <article class="docs-article" id="faqs">
-				    <header class="docs-header">
-					    <h1 class="docs-heading">FAQs</h1>
-					    <section class="docs-intro">
-						    <p>Section intro goes here. You can list all your FAQs using the format below.</p>
-						</section><!--//docs-intro-->
-				    </header>
-				     <section class="docs-section" id="faq-1">
-						<h2 class="section-heading">Section Item 9.1 <small>(FAQ Category One)</small></h2>
-						<h5 class="pt-3"><i class="fas fa-question-circle me-1"></i>What's sit amet quam eget lacinia?</h5>
-						<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.</p>
-						<h5 class="pt-3"><i class="fas fa-question-circle me-1"></i>How to ipsum dolor sit amet quam tortor?</h5>
-						<p>Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>
-						<h5 class="pt-3"><i class="fas fa-question-circle me-1"></i>Can I  bibendum sodales?</h5>
-						<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>
-						<h5 class="pt-3"><i class="fas fa-question-circle me-1"></i>Where arcu sed urna gravida?</h5>
-						<p>Aenean et sodales nisi, vel efficitur sapien. Quisque molestie diam libero, et elementum diam mollis ac. In dignissim aliquam est eget ullamcorper. Sed id sodales tortor, eu finibus leo. Vivamus dapibus sollicitudin justo vel fermentum. Curabitur nec arcu sed urna gravida lobortis. Donec lectus est, imperdiet eu viverra viverra, ultricies nec urna. </p>
-					</section><!--//section-->
-					
-					<section class="docs-section" id="faq-2">
-						<h2 class="section-heading">Section Item 9.2 <small>(FAQ Category Two)</small></h2>
-						<h5 class="pt-3"><i class="fas fa-question-circle me-1"></i>What's sit amet quam eget lacinia?</h5>
-						<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.</p>
-						<h5 class="pt-3"><i class="fas fa-question-circle me-1"></i>How to ipsum dolor sit amet quam tortor?</h5>
-						<p>Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>
-						<h5 class="pt-3"><i class="fas fa-question-circle me-1"></i>Can I  bibendum sodales?</h5>
-						<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>
-						<h5 class="pt-3"><i class="fas fa-question-circle me-1"></i>Where arcu sed urna gravida?</h5>
-						<p>Aenean et sodales nisi, vel efficitur sapien. Quisque molestie diam libero, et elementum diam mollis ac. In dignissim aliquam est eget ullamcorper. Sed id sodales tortor, eu finibus leo. Vivamus dapibus sollicitudin justo vel fermentum. Curabitur nec arcu sed urna gravida lobortis. Donec lectus est, imperdiet eu viverra viverra, ultricies nec urna. </p>
-					</section><!--//section-->
-					
-					<section class="docs-section" id="faq-3">
-							<h2 class="section-heading">Section Item 9.3 <small>(FAQ Category Three)</small></h2>
-						    <h5 class="pt-3"><i class="fas fa-question-circle me-1"></i>How to dapibus sollicitudin justo vel fermentum?</h5>
-							<p>Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>
-							<h5 class="pt-3"><i class="fas fa-question-circle me-1"></i>How long bibendum sodales?</h5>
-							<p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. </p>
-							<h5 class="pt-3"><i class="fas fa-question-circle me-1"></i>Where dapibus sollicitudin?</h5>
-							<p>Aenean et sodales nisi, vel efficitur sapien. Quisque molestie diam libero, et elementum diam mollis ac. In dignissim aliquam est eget ullamcorper. Sed id sodales tortor, eu finibus leo. Vivamus dapibus sollicitudin justo vel fermentum. Curabitur nec arcu sed urna gravida lobortis. Donec lectus est, imperdiet eu viverra viverra, ultricies nec urna. </p>
-					</section><!--//section-->
-			    </article><!--//docs-article-->
+  <header class="docs-header">
+    <h1 class="docs-heading">FAQs</h1>
+    <section class="docs-intro">
+      <p>Below you'll find answers to common questions about using the <code>mktpacket</code> library for web data collection and analytics.</p>
+    </section><!--//docs-intro-->
+  </header>
+
+  <!-- NEW RELEVANT FAQ SECTION -->
+  <section class="docs-section" id="faq-mktpacket">
+    <h2 class="section-heading">Data storage <small>(by mktpacket Library)</small></h2>
+
+    <h5 class="pt-3"><i class="fas fa-question-circle me-1"></i>What data, either my company or my clients is processed by this library</h5>
+    <p>No data is stored or detained within mktpacket API endpoint. All of the JS data is managed locally inside users browser, and sections like IP, ISP or UUID are not stored within any database inside our tech stack. All data usage is responsibility of the company that loads the library.</p>
+    <p>We will only storage a web domain -> api-key association to ensure PRO features load correctly, and a counter on how many requests have been launched within that domain for our infrastructure scalability planning.</p>
+
+    <h5 class="pt-3"><i class="fas fa-question-circle me-1"></i>Where does the data come from?</h5>
+    <p>All of the data listed is fetch from either browser internal information (that is easily accesible from the corresponding application APIs) or connection details of the user (like a hashed IP or ISP).</p>
+    <p>To ensure transparency we list all of the individual funcions within the Docs, and we don't obfuscate our code, also keeping the funcions as simple and readable as possible.</p>
+    <p>No privilege abuses or tricky sources about user information is pursued. Be aware that if the data is present within this library, any big corp. already has this information about it's clients.</p>
+
+    <h5 class="pt-3"><i class="fas fa-question-circle me-1"></i>Will this library reduce my website performance?</h5>
+    <p>Our principal focus while developing and delivering new features to the library, is to prevent any kind of heavy load and performance issues, the library implements systems that loads the code in a way that the blockages are minimal.</p>
+  </section>
+
+  <!-- You can keep your placeholder sections below or remove them -->
+  <section class="docs-section" id="faq-1">
+    <h2 class="section-heading">Implementation</h2>
+    Soon™
+  </section>
+
+  <section class="docs-section" id="faq-2">
+    <h2 class="section-heading">Usage</small></h2>
+    Soon™
+  </section>
+
+  <section class="docs-section" id="faq-3">
+    <h2 class="section-heading">Misc.</small></h2>
+    Soon™
+  </section>
+</article>
+
 
 			  
     <footer class="footer">
@@ -1373,8 +1498,9 @@
     <script src="assets/js/docs.js"></script> 
 
 	
-	<script src="https://cdn.jsdelivr.net/gh/codebakersdev/mktpacket@master/main.js" key="free-version" gtag=""></script>
-    <!--<script src="http://localhost/mktpacket/htdocs/main.js" key="free-version" gtag=""></script>-->
+	<!--<script src="https://cdn.jsdelivr.net/gh/codebakersdev/mktpacket@master/main.js" key="free-version" gtag=""></script>-->
+  <!--<script src="http://localhost/mktpacket/htdocs/main.js" key="free-version" gtag=""></script>-->
+  <script src="https://codebakers.dev/mktpacket/main.js" key="free-version" gtag=""></script>
 	<script>
 	// Poll mktpacket.data every 1 second and display it
 	function displayMktPacketData() {

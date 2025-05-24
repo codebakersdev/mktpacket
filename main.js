@@ -158,7 +158,7 @@ mktpacket.func = {
 
       if (!mktpacket.data.page) mktpacket.data.page = {};
       mktpacket.data.page.scroll_depth = {
-        pixels: scrollTop,
+        pixels: parseFloat(scrollTop.toFixed(2)),
         percent: Math.round(scrollPercent),
         max_scrollable_range: maxScrollable,
         total_page_height: scrollHeight
@@ -168,7 +168,29 @@ mktpacket.func = {
     calculateScrollDepth();
     setTimeout(window.mktpacket.func.getPageScrollDepth, 1000);
   },
+  getPageHeaviestResource: function () {
+    const resources = performance.getEntriesByType('resource');
+    const uncached = resources.filter(res => res.transferSize > 0);
 
+    if (uncached.length === 0) {
+      mktpacket.data.page.heaviest_resource = {
+        name: resources.length === 0 ? null : 'resources_cached',
+        size_bytes: 0,
+        load_time_ms: 0
+      };
+      return;
+    }
+
+    const heaviest = uncached.reduce((max, res) =>
+      res.transferSize > max.transferSize ? res : max
+    );
+
+    mktpacket.data.page.heaviest_resource = {
+      name: heaviest.name,
+      size_bytes: heaviest.transferSize,
+      load_time_ms: parseFloat(heaviest.duration.toFixed(2))
+    };
+  },
   getPageCoreWebVitals: function () {
     if (!mktpacket.data.page.core_web_vitals) mktpacket.data.page.core_web_vitals = {};
 
@@ -739,6 +761,7 @@ window.addEventListener('load', function(){
       mktpacket.func.getPageLoadTime();
       mktpacket.func.getPageStatus();
       mktpacket.func.getPageScrollDepth();
+      mktpacket.func.getPageHeaviestResource();
       mktpacket.func.getPageCoreWebVitals();
       mktpacket.func.getABTasty();
       //mktpacket.func.getPageColors();
