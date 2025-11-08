@@ -387,21 +387,17 @@ mktpacket.func = {
     setTimeout(window.mktpacket.func.getUserLocalDatetime, 1000);
   },
 
-  getUserIsBot:function() {
-    const is_bot_navigator = !navigator.language || 
-                           !navigator.languages || 
-                           navigator.languages.length === 0 || 
-                           navigator.webdriver || 
-                           navigator.doNotTrack !== null || 
-                           navigator.hardwareConcurrency === undefined || 
-                           navigator.maxTouchPoints === undefined;
+  getUserIsBot: function() {
+    let score = 0;
+    score += navigator.webdriver ? 2 : 0;
+    score += /bot|crawler|spider|robot|crawling/i.test(navigator.userAgent) ? 2 : 0;
+    score += (!navigator.plugins || navigator.plugins.length === 0) ? 1 : 0;
+    score += (!navigator.mimeTypes || navigator.mimeTypes.length === 0) ? 1 : 0;
+    score += (!('ontouchstart' in window) && navigator.maxTouchPoints === 0) ? 1 : 0;
+    score += (screen.width === 0 || screen.height === 0 || screen.width === screen.height) ? 1 : 0;
 
-    const userAgent = navigator.userAgent.toLowerCase();
-    const is_bot_useragent = /bot|crawler|spider|robot|crawling/i.test(userAgent);
-
-    mktpacket.data.user.is_bot = is_bot_navigator || is_bot_useragent;
+    mktpacket.data.user.is_bot = score >= 3;
   },
-
   getUserHasAdblock: function() {
     fetch('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', {
         mode: 'no-cors'
