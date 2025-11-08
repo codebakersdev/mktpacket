@@ -774,28 +774,24 @@
   </div><!--//docs-code-block-->
 </section>
 
-					<section class="docs-section" id="datafuncgetuserisbot">
+<section class="docs-section" id="datafuncgetuserisbot">
   <h4 class="callout-title">mktpacket.func<wbr>.getUserIsBot<wbr>()</h4>
-  <p>A function that detects whether the client appears to be a bot based on several navigator properties and the user agent string. It checks for missing navigator fields, automation indicators (like <code>navigator.webdriver</code>), and known bot keywords in the user agent.</p>
+  <p>A function that detects whether the client appears to be a bot based on several browser and system indicators. It assigns scores to suspicious properties such as missing plugins, abnormal screen dimensions, or the presence of automation flags. If the total score exceeds a threshold, the client is flagged as a potential bot.</p>
   <p>Data persists: No</p>
   <p>Output: <code>boolean</code></p>
   <p>Default value: <code>false</code></p>
   <div class="docs-code-block">
     <pre class="shadow-lg rounded"><code class="javascript hljs"><span class="hljs-title">getUserIsBot</span>: function() {
-  const is_bot_navigator = !navigator.language || 
-                         !navigator.languages || 
-                         navigator.languages.length === 0 || 
-                         navigator.webdriver || 
-                         navigator.doNotTrack !== null || 
-                         navigator.hardwareConcurrency === undefined || 
-                         navigator.maxTouchPoints === undefined;
+  let score = 0;
+  score += navigator.webdriver ? 2 : 0;
+  score += /bot|crawler|spider|robot|crawling/i.test(navigator.userAgent) ? 2 : 0;
+  score += (!navigator.plugins || navigator.plugins.length === 0) ? 1 : 0;
+  score += (!navigator.mimeTypes || navigator.mimeTypes.length === 0) ? 1 : 0;
+  score += (!('ontouchstart' in window) && navigator.maxTouchPoints === 0) ? 1 : 0;
+  score += (screen.width === 0 || screen.height === 0 || screen.width === screen.height) ? 1 : 0;
 
-  const userAgent = navigator.userAgent.toLowerCase();
-  const is_bot_useragent = /bot|crawler|spider|robot|crawling/i.test(userAgent);
-
-  mktpacket.data.user.is_bot = is_bot_navigator || is_bot_useragent;
-}
-</code></pre>
+  mktpacket.data.user.is_bot = score >= 3;
+},</code></pre>
   </div><!--//docs-code-block-->
 </section>
 
